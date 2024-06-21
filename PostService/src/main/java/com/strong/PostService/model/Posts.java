@@ -20,8 +20,6 @@ public class Posts {
 
     private String title;
 
-    private String content;
-
     private String authorId;
 
     private String createdAt;
@@ -33,4 +31,6 @@ public class Posts {
     private List<Likes> likes;
 
     private List<String> tags;
+
+    private List<ContentBlock> content;
 }

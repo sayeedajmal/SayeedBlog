@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.strong.PostService.Repository.CommentRepo;
 import com.strong.PostService.Utils.BlogException;
 import com.strong.PostService.model.Comments;
+import com.strong.PostService.model.Posts;
 
 @Service
 public class CommentService {
@@ -20,6 +25,8 @@ public class CommentService {
     private CommentRepo commentRepo;
     @Autowired
     private PostService postService;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Transactional
     public Comments SaveComment(Comments comment) throws BlogException {
@@ -53,9 +60,20 @@ public class CommentService {
                 .orElseThrow(() -> new BlogException("Cant' Found Comment by postId: " + userId));
     }
 
+    @Transactional
     public void removeCmtById(String cmtId) throws BlogException {
         Comments byId = commentRepo.findById(cmtId)
                 .orElseThrow(() -> new BlogException("Can't Found Comment_Id : " + cmtId));
+
+        // Remove From Post Object
+        Query query = new Query(Criteria.where("_id").is(byId.getPostId()));
+        Posts post = mongoTemplate.findOne(query, Posts.class);
+        if (post == null) {
+            throw new BlogException("Can't find post by PostId: " + byId.getPostId());
+        }
+        // Removing the cmtId
+        Update update = new Update().pull("comments", byId.get_id());
+        mongoTemplate.updateFirst(query, update, Posts.class);
         commentRepo.delete(byId);
     }
 

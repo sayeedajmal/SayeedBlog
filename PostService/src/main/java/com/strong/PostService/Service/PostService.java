@@ -25,31 +25,7 @@ public class PostService {
     @Autowired
     private PostRepo postRepo;
     @Autowired
-    private LikeService likeService;
-    @Autowired
     private MongoTemplate mongoTemplate;
-
-    @Transactional
-    public void toggleLike(Likes like) throws BlogException {
-        /* First get Post then push the userId to post */
-        Query query = new Query(Criteria.where("_id").is(like.getPostId()));
-
-        Posts post = mongoTemplate.findOne(query, Posts.class);
-        if (post == null) {
-            throw new BlogException("Can't find post by PostId: " + like.getPostId());
-        }
-
-        Update update;
-        if (like != null && post.getLikes() != null && post.getLikes().contains(like.getUserId())) {
-            update = new Update().pull("likes", like.getUserId());
-            likeService.removeLike(like.getUserId());
-        } else {
-            likeService.saveLike(like);
-            update = new Update().addToSet("likes", like.getUserId());
-        }
-
-        mongoTemplate.updateFirst(query, update, Posts.class);
-    }
 
     @Transactional
     public void addComment(Comments cmt) throws BlogException {
@@ -108,9 +84,23 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePostbyId(String postId) throws BlogException {
-        Posts byId = postRepo.findById(postId).orElseThrow(() -> new BlogException("Can't Found PostId : " + postId));
-        postRepo.delete(byId);
+    public void deletePostById(String postId) throws BlogException {
+        Posts post = postRepo.findById(postId)
+                .orElseThrow(() -> new BlogException("Can't find post by PostId: " + postId));
+
+        // Delete comments
+        if (post.getComments() != null && !post.getComments().isEmpty()) {
+            Query commentQuery = new Query(Criteria.where("_id").in(post.getComments()));
+            mongoTemplate.remove(commentQuery, Comments.class);
+        }
+
+        // Delete associated likes
+        if (post.getLikes() != null && !post.getLikes().isEmpty()) {
+            Query likeQuery = new Query(Criteria.where("postId").is(postId));
+            mongoTemplate.remove(likeQuery, Likes.class);
+        }
+
+        postRepo.delete(post);
     }
 
 }

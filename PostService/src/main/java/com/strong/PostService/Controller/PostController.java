@@ -42,7 +42,7 @@ public class PostController {
 
     @DeleteMapping("byPostId")
     public ResponseEntity<?> deletePostById(@RequestParam("postId") String postId) throws BlogException {
-        postService.deletePostbyId(postId);
+        postService.deletePostById(postId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

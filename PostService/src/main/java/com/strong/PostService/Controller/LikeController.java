@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.strong.PostService.Service.LikeService;
-import com.strong.PostService.Service.PostService;
 import com.strong.PostService.Utils.BlogException;
 import com.strong.PostService.model.Likes;
 
@@ -23,13 +22,11 @@ public class LikeController {
 
     @Autowired
     private LikeService likeService;
-    @Autowired
-    private PostService postService;
 
     @PostMapping("like")
     public ResponseEntity<?> saveLike(@RequestBody @Valid Likes like) throws BlogException {
         like.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
-        postService.toggleLike(like);
+        likeService.toggleLike(like);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

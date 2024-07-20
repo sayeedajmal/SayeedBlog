@@ -28,7 +28,7 @@ public class Posts {
 
     private String updatedAt;
 
-    private List<Comments> comments;
+    private List<String> comments;
 
     private List<String> likes;
 

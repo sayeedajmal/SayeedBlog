@@ -14,11 +14,11 @@ import lombok.Setter;
 public class Comments {
 
     @Id
-    private String commentId;
+    private String _id;
 
     private String postId;
 
-    private String authorId;
+    private String userId;
 
     private String content;
 

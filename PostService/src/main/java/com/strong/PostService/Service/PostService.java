@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.strong.PostService.Repository.PostRepo;
 import com.strong.PostService.Utils.BlogException;
+import com.strong.PostService.model.Comments;
 import com.strong.PostService.model.Likes;
 import com.strong.PostService.model.Posts;
 
@@ -30,6 +31,7 @@ public class PostService {
 
     @Transactional
     public void toggleLike(Likes like) throws BlogException {
+        /* First get Post then push the userId to post */
         Query query = new Query(Criteria.where("_id").is(like.getPostId()));
 
         Posts post = mongoTemplate.findOne(query, Posts.class);
@@ -38,7 +40,7 @@ public class PostService {
         }
 
         Update update;
-        if (post.getLikes().contains(like.getUserId())) {
+        if (like != null && post.getLikes() != null && post.getLikes().contains(like.getUserId())) {
             update = new Update().pull("likes", like.getUserId());
             likeService.removeLike(like.getUserId());
         } else {
@@ -49,6 +51,20 @@ public class PostService {
         mongoTemplate.updateFirst(query, update, Posts.class);
     }
 
+    @Transactional
+    public void addComment(Comments cmt) throws BlogException {
+        /* First get Post then push the commentId to post */
+        Query query = new Query(Criteria.where("_id").is(cmt.getPostId()));
+
+        Posts post = mongoTemplate.findOne(query, Posts.class);
+        if (post == null) {
+            throw new BlogException("Can't find post by PostId: " + cmt.getPostId());
+        }
+        Update update = new Update().addToSet("comments", cmt.get_id());
+        mongoTemplate.updateFirst(query, update, Posts.class);
+    }
+
+    @Transactional
     public Posts CreatePost(Posts post) {
         post.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         post.setUpdatedAt(null);
@@ -65,9 +81,33 @@ public class PostService {
     }
 
     public Posts findPostById(String postId) throws BlogException {
-        return postRepo.findById(postId).orElseThrow();
+        return postRepo.findById(postId).orElseThrow(() -> new BlogException("Cant' Found Post by postId: " + postId));
     }
 
+    @Transactional
+    public Posts updatePostById(String postId, Posts newPost) throws BlogException {
+        Query query = new Query(Criteria.where("_id").is(postId));
+
+        Update update = new Update();
+        if (newPost.getTitle() != null) {
+            update.set("title", newPost.getTitle());
+        }
+        if (newPost.getSummary() != null) {
+            update.set("summary", newPost.getSummary());
+        }
+        if (newPost.getContent() != null) {
+            update.set("content", newPost.getContent());
+        }
+        if (newPost.getTags() != null) {
+            update.set("tags", newPost.getTags());
+        }
+        update.set("updatedAt", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+
+        mongoTemplate.updateFirst(query, update, Posts.class);
+        return mongoTemplate.findOne(query, Posts.class);
+    }
+
+    @Transactional
     public void deletePostbyId(String postId) throws BlogException {
         Posts byId = postRepo.findById(postId).orElseThrow(() -> new BlogException("Can't Found PostId : " + postId));
         postRepo.delete(byId);

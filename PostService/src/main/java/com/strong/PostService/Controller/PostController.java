@@ -24,24 +24,25 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("savePost")
-    public void createPost(@RequestBody @Valid Posts post) {
-        postService.CreatePost(post);
+    @PostMapping("post")
+    public ResponseEntity<Posts> createPost(@RequestBody @Valid Posts post) {
+        return new ResponseEntity<>(postService.CreatePost(post), HttpStatus.CREATED);
     }
 
-    @GetMapping("showAll")
+    @GetMapping("post")
     public ResponseEntity<List<Posts>> showAllPosts() throws BlogException {
         return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
     }
 
-    @GetMapping("ByPostId")
+    @GetMapping("byPostId")
     public ResponseEntity<Posts> findPostbyId(@RequestParam("postId") String postId) throws BlogException {
         return new ResponseEntity<>(postService.findPostById(postId), HttpStatus.OK);
     }
 
-    @DeleteMapping("ByPostId")
-    public void deletePostById(@RequestParam("postId") String postId) throws BlogException {
+    @DeleteMapping("byPostId")
+    public ResponseEntity<?> deletePostById(@RequestParam("postId") String postId) throws BlogException {
         postService.deletePostbyId(postId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

@@ -11,11 +11,12 @@ import lombok.Setter;
 @Setter
 @Document
 @NoArgsConstructor
-public class Likes {
+public class Tags {
+
     @Id
-    private String _id;
+    private String tagId;
 
-    private String postId;
+    private String name;
 
-    private String userId;
+    private String createdAt;
 }

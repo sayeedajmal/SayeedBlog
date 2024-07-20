@@ -16,9 +16,11 @@ import lombok.Setter;
 public class Posts {
 
     @Id
-    private String postId;
+    private String _id;
 
     private String title;
+
+    private String summary;
 
     private String authorId;
 
@@ -28,9 +30,17 @@ public class Posts {
 
     private List<Comments> comments;
 
-    private List<Likes> likes;
+    private List<String> likes;
 
     private List<String> tags;
 
     private List<ContentBlock> content;
+
+    @Getter
+    @Setter
+    @Document
+    public static class ContentBlock {
+        private String content;
+        private String imageUrl;
+    }
 }

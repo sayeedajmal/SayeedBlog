@@ -1,16 +1,17 @@
-# Microservices Blog Project
+# FullStack Java React Blog Project
 
-This project demonstrates a microservices architecture for a blogging platform using Spring Boot, MongoDB, and various Spring technologies.
+This project demonstrates a Microservices(Spring Boot, Mongodb,Spring Security,JWT) and FrontEnd(ReatJs) architecture for a blogging platform using various technologies.
 
 ## Project Overview
 
-The project consists of several microservices that collectively provide a blogging platform with functionalities such as post management, user authentication, and notifications.
+The project consists of several Microservices and FrontEnd that collectively provide a blogging platform with functionalities such as post management, user authentication, and notifications.
 
 ### Modules
 
 1. **PostService**: Manages posts, comments, likes, and search functionality.
 2. **UserService**: Manages user profiles, authentication, and user-related operations.
 3. **NotificationService**: Manages notifications and alerting users about activities.
+4. **SayeedBlogWebApp**: FrontEnd By ReactJs implement all the Modules.
 
 ## Getting Started
 
@@ -39,11 +40,14 @@ To run the project locally, follow these steps:
      ```
 
    - **UserService:**
+
      ```bash
      cd UserService
      mvn spring-boot:run
      ```
+
    - **NotificationService:**
+
      ```bash
      cd NotificationService
      mvn spring-boot:run
@@ -51,17 +55,17 @@ To run the project locally, follow these steps:
 
 4. **Access APIs:**
 
-   - **PostService APIs:** http://localhost/api/posts
-   - **UserService APIs:** http://localhost/api/users
-   - **NotificationService APIs:** http://localhost/api/notifications
+   - **PostService APIs:** <http://localhost/api/posts>
+   - **UserService APIs:** <http://localhost/api/users>
+   - **NotificationService APIs:** <http://localhost/api/notifications>
 
 5. **Documentation:**
 
    Swagger/OpenAPI documentation can be accessed at:
 
-   - **PostService:** http://localhost/swagger-ui.html
-   - **UserService:** http://localhost/swagger-ui.html
-   - **NotificationService:** http://localhost/swagger-ui.html
+   - **PostService:** <http://localhost/swagger-ui.html>
+   - **UserService:** <http://localhost/swagger-ui.html>
+   - **NotificationService:** <http://localhost/swagger-ui.html>
 
 ## Project Structure
 
@@ -72,22 +76,22 @@ The project is organized into the following modules:
 **Structure:**
 
 ```
-PostService
-├── src
-│   ├── main
-│   │   ├── java/com/strong/PostService
-│   │   │   ├── controller     // REST controllers
-│   │   │   ├── model          // Entity classes (Post, Comment, Like, Search)
-│   │   │   ├── repository     // Spring Data MongoDB repositories
-│   │   │   ├── service        // Service classes (PostService, CommentService, etc.)
-│   │   │   └── PostServiceApplication.java  // Spring Boot application main class
-│   │   └── resources
-│   │       ├── application.properties  // Configuration properties
-│   │       └── static
-│   └── test
-│       └── java/com/strong/PostService
-│           └── (Unit and Integration Tests)
-└── pom.xml
+   PostService
+   ├── src
+   │   ├── main
+   │   │   ├── java/com/strong/PostService
+   │   │   │   ├── controller     // REST controllers
+   │   │   │   ├── model          // Entity classes (Post, Comment, Like, Search)
+   │   │   │   ├── repository     // Spring Data MongoDB repositories
+   │   │   │   ├── service        // Service classes (PostService, CommentService, etc.)
+   │   │   │   └── PostServiceApplication.java  // Spring Boot application main class
+   │   │   └── resources
+   │   │       ├── application.properties  // Configuration properties
+   │   │       └── static
+   │   └── test
+   │       └── java/com/strong/PostService
+   │           └── (Unit and Integration Tests)
+   └── pom.xml
 ```
 
 ### 2. UserService
@@ -143,6 +147,7 @@ NotificationService
 - **Spring Security:** Authentication and authorization.
 - **Swagger/OpenAPI:** API documentation and testing.
 - **Maven:** Dependency management and build automation.
+- **ReactJs:** FrontEnd For Showcase.
 
 ## Contributing
 

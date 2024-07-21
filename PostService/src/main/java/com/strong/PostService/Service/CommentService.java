@@ -24,8 +24,6 @@ public class CommentService {
     @Autowired
     private CommentRepo commentRepo;
     @Autowired
-    private PostService postService;
-    @Autowired
     private MongoTemplate mongoTemplate;
 
     @Transactional
@@ -33,8 +31,21 @@ public class CommentService {
         comment.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         comment.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
         comment.setUpdatedAt(null);
-        postService.addComment(comment);
+        addComment(comment);
         return commentRepo.save(comment);
+    }
+
+    @Transactional
+    public void addComment(Comments cmt) throws BlogException {
+        /* First get Post then push the commentId to post */
+        Query query = new Query(Criteria.where("_id").is(cmt.getPostId()));
+
+        Posts post = mongoTemplate.findOne(query, Posts.class);
+        if (post == null) {
+            throw new BlogException("Can't find post by PostId: " + cmt.getPostId());
+        }
+        Update update = new Update().addToSet("comments", cmt.get_id());
+        mongoTemplate.updateFirst(query, update, Posts.class);
     }
 
     public List<Comments> getAllByPostId(String postId) throws BlogException {

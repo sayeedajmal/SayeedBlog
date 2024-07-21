@@ -1,6 +1,8 @@
 package com.strong.PostService.Controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -27,9 +29,13 @@ public class ImageUploadController {
     private ImageStorageService imageStorageService;
 
     @PostMapping("/upload")
-    public String uploadImage(@RequestParam("file") MultipartFile file) {
-        String uploadImage = imageStorageService.uploadImage(file);
-        return uploadImage;
+    public List<String> uploadImages(@RequestParam("files") MultipartFile[] files) {
+        List<String> fieldId = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String uploadImage = imageStorageService.uploadImage(file);
+            fieldId.add(uploadImage);
+        }
+        return fieldId;
     }
 
     @GetMapping("/{fileId}")

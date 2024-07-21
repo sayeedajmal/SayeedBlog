@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,9 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.strong.PostService.Repository.PostRepo;
 import com.strong.PostService.Utils.BlogException;
-import com.strong.PostService.model.Comments;
-import com.strong.PostService.model.Likes;
 import com.strong.PostService.model.Posts;
+import com.strong.PostService.model.Posts.ContentBlock;
 
 @Service
 public class PostService {
@@ -25,20 +25,13 @@ public class PostService {
     @Autowired
     private PostRepo postRepo;
     @Autowired
+    private CommentService commentService;
+    @Autowired
+    private LikeService likeService;
+    @Autowired
     private MongoTemplate mongoTemplate;
-
-    @Transactional
-    public void addComment(Comments cmt) throws BlogException {
-        /* First get Post then push the commentId to post */
-        Query query = new Query(Criteria.where("_id").is(cmt.getPostId()));
-
-        Posts post = mongoTemplate.findOne(query, Posts.class);
-        if (post == null) {
-            throw new BlogException("Can't find post by PostId: " + cmt.getPostId());
-        }
-        Update update = new Update().addToSet("comments", cmt.get_id());
-        mongoTemplate.updateFirst(query, update, Posts.class);
-    }
+    @Autowired
+    private ImageStorageService imageStorageService;
 
     @Transactional
     public Posts CreatePost(Posts post) {
@@ -90,14 +83,27 @@ public class PostService {
 
         // Delete comments
         if (post.getComments() != null && !post.getComments().isEmpty()) {
-            Query commentQuery = new Query(Criteria.where("_id").in(post.getComments()));
-            mongoTemplate.remove(commentQuery, Comments.class);
+            for (String commentId : post.getComments()) {
+                commentService.removeCmtById(commentId);
+            }
+        }
+
+        // Delete Images
+        if (post.getContent() != null && !post.getContent().isEmpty()) {
+            List<String> imageUrls = post.getContent().stream()
+                    .map(ContentBlock::getImageUrl)
+                    .collect(Collectors.toList());
+
+            for (String fieldId : imageUrls) {
+                imageStorageService.deleteImage(fieldId);
+            }
         }
 
         // Delete associated likes
         if (post.getLikes() != null && !post.getLikes().isEmpty()) {
-            Query likeQuery = new Query(Criteria.where("postId").is(postId));
-            mongoTemplate.remove(likeQuery, Likes.class);
+            for (String userId : post.getLikes()) {
+                likeService.removeLike(userId);
+            }
         }
 
         postRepo.delete(post);

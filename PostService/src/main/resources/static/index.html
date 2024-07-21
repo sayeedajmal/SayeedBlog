@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Images</title>
+</head>
+<body>
+    <h1>Upload Images</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageUpload" name="files" multiple required>
+        <button type="button" onclick="uploadImages()">Upload</button>
+    </form>
+    <div id="uploadedImages"></div>
+
+    <script>
+        async function uploadImages() {
+            const form = document.getElementById('uploadForm');
+            const formData = new FormData(form);
+
+            const response = await fetch('/api/images/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const imageUrls = await response.json();
+            displayUploadedImages(imageUrls);
+        }
+
+        function displayUploadedImages(imageUrls) {
+            const uploadedImagesDiv = document.getElementById('uploadedImages');
+            uploadedImagesDiv.innerHTML = '';
+
+            if (imageUrls.length > 0) {
+                const ul = document.createElement('ul');
+
+                imageUrls.forEach(url => {
+                    const li = document.createElement('li');
+                    li.textContent = url;
+                    ul.appendChild(li);
+                });
+
+                uploadedImagesDiv.appendChild(ul);
+            } else {
+                uploadedImagesDiv.textContent = 'No images were uploaded.';
+            }
+        }
+    </script>
+</body>
+</html>

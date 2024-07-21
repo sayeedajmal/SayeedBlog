@@ -13,6 +13,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mongodb.MongoGridFSException;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.GridFSFindIterable;
@@ -59,8 +60,7 @@ public class ImageStorageService {
     public void deleteImage(String fileId) {
         try {
             gridFSBucket.delete(new ObjectId(fileId));
-        } catch (Exception e) {
-            throw new RuntimeException("Error deleting file", e);
+        } catch (IllegalArgumentException | MongoGridFSException e) {
         }
     }
 

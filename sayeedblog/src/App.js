@@ -1,9 +1,10 @@
 import "./App.css";
-
+import EditBlog from "./container/EditBlog";
+import ShowBlog from "./container/ShowBlog";
 function App() {
   return (
     <div className="App">
-      <h1>Here We Build FrontEnd of Blog</h1>
+      <EditBlog />
     </div>
   );
 }

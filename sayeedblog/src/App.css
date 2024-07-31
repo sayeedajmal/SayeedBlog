@@ -1,0 +1,31 @@
+/* In your global stylesheet (e.g., styles.css or App.css) */
+
+.tiptap-content pre {
+    background-color: #f5f5f5; /* Desired background color */
+    color: #333333; /* Desired text color */
+    padding: 8px; /* Add padding if needed */
+    border-radius: 4px; /* Optional: Add rounded corners */
+  }
+  
+  .tiptap-content code {
+    color: #d63384; /* Desired code text color */
+    background-color: #f8f9fa; /* Desired inline code background color */
+    padding: 2px 4px; /* Optional: Add padding */
+    border-radius: 4px; /* Optional: Add rounded corners */
+  }
+  
+  .tiptap-content table {
+    width: 100%;
+    border-collapse: collapse; /* Ensure borders are displayed properly */
+  }
+  
+  .tiptap-content th,
+  .tiptap-content td {
+    border: 1px solid #ddd; /* Define border style and color */
+    padding: 8px; /* Add padding */
+  }
+  
+  .tiptap-content th {
+    background-color: #f2f2f2; /* Optional: Add a background color for header cells */
+  }
+  

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.strong.PostService.Repository.PostRepo;
 import com.strong.PostService.Utils.BlogException;
 import com.strong.PostService.model.Posts;
-import com.strong.PostService.model.Posts.ContentBlock;
 
 @Service
 public class PostService {
@@ -89,12 +87,9 @@ public class PostService {
         }
 
         // Delete Images
-        if (post.getContent() != null && !post.getContent().isEmpty()) {
-            List<String> imageUrls = post.getContent().stream()
-                    .map(ContentBlock::getImageUrl)
-                    .collect(Collectors.toList());
-
-            for (String fieldId : imageUrls) {
+        if (post.getImages() != null && !post.getImages().isEmpty()) {
+            List<String> listImages = post.getImages();
+            for (String fieldId : listImages) {
                 imageStorageService.deleteImage(fieldId);
             }
         }

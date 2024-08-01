@@ -34,13 +34,7 @@ public class Posts {
 
     private List<String> tags;
 
-    private List<ContentBlock> content;
+    private String content;
 
-    @Getter
-    @Setter
-    @Document
-    public static class ContentBlock {
-        private String content;
-        private String imageUrl;
-    }
+    private List<String> images;
 }

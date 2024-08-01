@@ -4,16 +4,16 @@ import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { PiHandsClappingFill } from "react-icons/pi";
 import img from "../images/bg.jpg";
 
-const AuthorBadge = () => {
+const AuthorBadge = ({AuthorName}) => {
   return (
     <div className="flex-1 items-center">
       <div className="flex">
         <img src={img} alt="author" className="h-10 w-10 rounded-full" />
         <div className="ml-4">
           <div className="flex items-center">
-            <h2 className="mr-2">Sayeed Ahmed</h2>
+            <h2 className="mr-2">{AuthorName}</h2>
             <span className="mr-2">&bull;</span>
-            <a href="" className="font-bold text-blue-900">
+            <a href="http://sayeedthedev.web.app" className="font-bold text-blue-900">
               Follow
             </a>
           </div>

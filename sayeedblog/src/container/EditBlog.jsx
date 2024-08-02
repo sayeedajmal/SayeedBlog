@@ -2,7 +2,9 @@ import Code from "@tiptap/extension-code";
 import CodeBlock from "@tiptap/extension-code-block";
 import { Color } from "@tiptap/extension-color";
 import FontFamily from "@tiptap/extension-font-family";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import { Image } from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import Strike from "@tiptap/extension-strike";
 import Subscript from "@tiptap/extension-subscript";
@@ -29,6 +31,7 @@ import {
   MenuButtonCodeBlock,
   MenuButtonColorPicker,
   MenuButtonEditLink,
+  MenuButtonHorizontalRule,
   MenuButtonImageUpload,
   MenuButtonItalic,
   MenuButtonOrderedList,
@@ -121,6 +124,36 @@ const EditBlog = () => {
       setPreview(false);
     }
   };
+
+  const setLink = useCallback(() => {
+    const previousUrl = rteRef.current?.editor?.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    // cancelled
+    if (url === null) {
+      return;
+    }
+
+    // empty
+    if (url === "") {
+      rteRef.current?.editor
+        ?.chain()
+        .focus()
+        .extendMarkRange("link")
+        .unsetLink()
+        .run();
+
+      return;
+    }
+
+    // update link
+    rteRef.current?.editor
+      ?.chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url })
+      .run();
+  }, []);
 
   const handleChange = () => {
     const content = rteRef.current?.editor?.getText() || "";
@@ -223,6 +256,7 @@ const EditBlog = () => {
                     style: "text-align: inherit;",
                   },
                 }),
+                HorizontalRule,
                 Underline,
                 Table.configure({
                   resizable: true,
@@ -232,6 +266,15 @@ const EditBlog = () => {
                     class: "border-gray-300",
                     style:
                       "display:flex; justify-content:center; border-collapse: collapse;",
+                  },
+                }),
+                Link.configure({
+                  validate: (href) => /^https?:\/\//.test(href),
+                  openOnClick: false,
+                  autolink: true,
+                  defaultProtocol: "https",
+                  HTMLAttributes: {
+                    style: "color:#1976d2; cursor:pointer;",
                   },
                 }),
                 TableRow,
@@ -270,7 +313,8 @@ const EditBlog = () => {
                 }),
                 Image.configure({
                   HTMLAttributes: {
-                    style: "margin:1rem auto; max-width:70vw; max-height:70vh;",
+                    style:
+                      "margin:1rem auto; max-height:70vh; border-radius:1rem;",
                   },
                 }),
                 CodeBlock.configure({
@@ -308,6 +352,7 @@ const EditBlog = () => {
                       { label: "Dancing Script", value: "dancing-script" },
                     ]}
                   />
+                  <MenuButtonHorizontalRule />
                   <MenuSelectFontSize />
                   <MenuButtonBold />
                   <MenuButtonItalic />
@@ -328,7 +373,93 @@ const EditBlog = () => {
                     onChange={openLinkBubble}
                   />
                   <MenuButtonAddTable />
-                  <MenuButtonEditLink onClick={openLinkBubble} />
+                  <button
+                    onClick={() =>
+                      rteRef.current?.editor
+                        ?.chain()
+                        .focus()
+                        .addColumnAfter()
+                        .run()
+                    }
+                    title="Add column after"
+                  >
+                    ➕
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      rteRef.current?.editor
+                        ?.chain()
+                        .focus()
+                        .deleteColumn()
+                        .run()
+                    }
+                    title="Delete column"
+                  >
+                    🗑️
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      rteRef.current?.editor
+                        ?.chain()
+                        .focus()
+                        .addRowBefore()
+                        .run()
+                    }
+                    title="Add row before"
+                  >
+                    ⬆️
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      rteRef.current?.editor
+                        ?.chain()
+                        .focus()
+                        .addRowAfter()
+                        .run()
+                    }
+                    title="Add row after"
+                  >
+                    ⬇️
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      rteRef.current?.editor?.chain().focus().deleteRow().run()
+                    }
+                    title="Delete row"
+                  >
+                    🗑️
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      rteRef.current?.editor
+                        ?.chain()
+                        .focus()
+                        .deleteTable()
+                        .run()
+                    }
+                    title="Delete table"
+                  >
+                    🗑️
+                  </button>
+                  <button
+                    onClick={() =>
+                      rteRef.current?.editor
+                        ?.chain()
+                        .focus()
+                        .toggleHeaderColumn()
+                        .run()
+                    }
+                    title="Toggle header column"
+                  >
+                    🔲
+                  </button>
+
+                  <MenuButtonEditLink onClick={setLink} />
                   <MenuButtonStrikethrough />
                   <MenuButtonSubscript />
                   <MenuButtonSuperscript />

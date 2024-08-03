@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -35,23 +37,33 @@ public class SecurityConfig {
     @Value("${bloodDonation.Cors.Methods}")
     private String CORS_METHODS;
 
+    private final AuthorService authorService;
+    private final JwtRequestFilter jwtRequestFilter;
     @Autowired
-    private AuthorService authorService;
+    private CustomLogoutHandler logoutHandler;
 
-    @Autowired
-    private JwtRequestFilter jwtAuthenticationFilter;
+    public SecurityConfig(@Lazy AuthorService authorService, JwtRequestFilter jwtRequestFilter) {
+        this.authorService = authorService;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.GET, "api/actuator/health/").permitAll()
+                        .requestMatchers("/api/accessToken").permitAll()
+                        .requestMatchers("/api/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(authorService)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .logout(logout -> logout
+                        .logoutUrl("/api/v1/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler(
+                                (request, response, authentication) -> SecurityContextHolder.clearContext()));
         return http.build();
     }
 
@@ -76,6 +88,5 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-
     }
 }

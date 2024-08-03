@@ -32,10 +32,13 @@ public class AuthorService implements UserDetailsService {
     @Autowired
     private AuthorRepo authorRepository;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private AuthenticationManager authenticationManager;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
+    @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
@@ -57,11 +60,16 @@ public class AuthorService implements UserDetailsService {
 
     public String signUp(Author author) throws AuthorException {
         if (authorRepository.findByEmail(author.getEmail()).isPresent()) {
-            throw new AuthorException("Already Found This Email: " + author.getEmail());
+            throw new AuthorException("Email already in use: " + author.getEmail());
         }
-
         author.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         author.setPassword(passwordEncoder.encode(author.getPassword()));
+        author.setAuthorities(List.of("AUTHOR"));
+        author.setAccountNonExpired(true);
+        author.setAccountNonLocked(true);
+        author.setCredentialsNonExpired(true);
+        author.setEnabled(true);
+
         authorRepository.save(author);
 
         String accessToken = jwtUtil.generateAccessToken(author);
@@ -84,7 +92,12 @@ public class AuthorService implements UserDetailsService {
         Author authenticatedAuthor = authorRepository.findByEmail(author.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Author not found"));
 
-        return jwtUtil.generateAccessToken(authenticatedAuthor);
+        String accessToken = jwtUtil.generateAccessToken(authenticatedAuthor);
+        String refreshToken = jwtUtil.generateRefreshToken(authenticatedAuthor);
+
+        revokeAllTokens(authenticatedAuthor);
+        saveToken(accessToken, refreshToken, authenticatedAuthor);
+        return accessToken;
     }
 
     public Author updateAuthor(String id, Author authorDetails) throws AuthorException {
@@ -152,7 +165,6 @@ public class AuthorService implements UserDetailsService {
         if (validTokens.isEmpty()) {
             return;
         }
-
         validTokens.forEach(token -> {
             tokenRepository.delete(token);
         });

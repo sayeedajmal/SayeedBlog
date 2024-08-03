@@ -2,6 +2,7 @@ package com.strong.AuthorService.Entity;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -20,15 +21,16 @@ import lombok.Setter;
 @Document
 @NoArgsConstructor
 public class Author implements UserDetails {
+
     @Id
     @Indexed(unique = true)
     private String _id;
 
-    @Indexed(unique = true)
     @NonNull
     private String name;
 
     @NonNull
+    @Indexed(unique = true)
     private String email;
 
     @NonNull
@@ -40,9 +42,22 @@ public class Author implements UserDetails {
     @NonNull
     private String profilePicture;
 
+    @NonNull
+    private List<String> authorities;
+
+    private boolean accountNonExpired;
+
+    private boolean accountNonLocked;
+
+    private boolean credentialsNonExpired;
+
+    private boolean enabled;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("author"));
+        return authorities.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -51,23 +66,22 @@ public class Author implements UserDetails {
     }
 
     @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 }

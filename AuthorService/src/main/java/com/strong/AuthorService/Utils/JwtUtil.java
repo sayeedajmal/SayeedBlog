@@ -31,7 +31,7 @@ public class JwtUtil {
     private long refreshTokenExpire;
 
     @Autowired
-    private TokenRepository tokenRepo;
+    TokenRepository tokenRepo;
 
     public String extractUserEmail(String token) {
         return extractClaim(token, Claims::getSubject);

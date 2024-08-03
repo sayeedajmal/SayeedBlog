@@ -2,19 +2,26 @@ import React from "react";
 
 const PostCard = ({ post }) => {
   return (
-    <div className="flex items-center rounded-xl overflow-auto w-10/12 p-5 bg-gray-50 m-3">
+    <div className="flex flex-col md:flex-row items-center rounded-xl overflow-hidden  p-5 bg-gray-50 dark:bg-gray-800 m-3 shadow-lg dark:shadow-xl transition-transform duration-300 ease-in-out">
       <img
         src={post.image}
         alt="postImg"
-        className="w-[15vw] h-[22vh] mr-5 rounded-xl"
+        className="w-1/3 h-auto md:h-[22vh] object-cover rounded-xl mb-4 md:mb-0 md:mr-5"
       />
-      <div className="">
-        <h2 className="font-bold text-xl text-blue-300">{post.title}</h2>
-        <p className="text-gray-500">
+      <div className="flex-1">
+        <h2 className="font-bold text-xl text-blue-500 dark:text-blue-300 mb-2">
+          {post.title}
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-2">
           {post.date} | {post.category}
         </p>
-        <p className="text-gray-600">{post.content}</p>
-        <a href={post.readMoreLink} className="text-green-500">
+        <p className="text-gray-700 text-justify dark:text-gray-300 mb-4">
+          {post.content}
+        </p>
+        <a
+          href={post.readMoreLink}
+          className="text-green-500 dark:text-green-300 hover:underline"
+        >
           Read More
         </a>
       </div>

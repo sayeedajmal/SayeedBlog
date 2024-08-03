@@ -1,5 +1,6 @@
 import React from "react";
 import PostCard from "../component/PostCard";
+import DarkMode from "../component/DarkMode";
 
 const samplePostData = [
   {
@@ -51,27 +52,35 @@ const samplePostData = [
 
 const AllPosts = () => {
   return (
-    <div className="flex h-screen p-3">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-gray-800 h-full text-white p-4 rounded-2xl">
-        Contain SideBar
+    <>
+      <div className="absolute bottom-1/4 right-10 border-2 border-green-600 bg-green-600 rounded-full">
+        <DarkMode />
       </div>
-      <div className="w-3/4 bg-white h-full overflow-auto scrollable-content rounded-2xl shadow-2xl p-4">
-        <h1 className="text-center font-bold text-3xl mb-4 text-gray-700">
-          Your All Valuable BlogPosts
-        </h1>
-        <h5 className="text-center font-bold text-sm mb-6 text-gray-400">
-          You Can Check And Keep Track of Your All Posts
-        </h5>
-        {samplePostData && samplePostData.length > 0 ? (
-          samplePostData.map((post, index) => (
-            <PostCard key={index} post={post} />
-          ))
-        ) : (
-          <p className="text-center">No posts available</p>
-        )}
+      <div className="flex flex-col md:flex-row h-screen p-4 bg-white dark:bg-gray-900">
+        {/* Sidebar */}
+        <div className="hidden md:block w-full md:w-1/4 bg-gray-800 dark:bg-gray-700 h-full text-white p-4 rounded-2xl mb-4 md:mb-0">
+          Contain SideBar
+        </div>
+        <div className="w-full md:w-3/4 bg-white dark:bg-gray-800 h-full overflow-auto scrollable-content rounded-2xl shadow-xl p-4">
+          <h1 className="text-center font-bold text-3xl mb-4 text-gray-700 dark:text-gray-100">
+            Your All Valuable BlogPosts
+          </h1>
+
+          <h5 className="text-center font-bold text-sm mb-6 text-gray-400 dark:text-gray-500">
+            You Can Check And Keep Track of Your All Posts
+          </h5>
+          {samplePostData && samplePostData.length > 0 ? (
+            samplePostData.map((post, index) => (
+              <PostCard key={index} post={post} />
+            ))
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400">
+              No posts available
+            </p>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

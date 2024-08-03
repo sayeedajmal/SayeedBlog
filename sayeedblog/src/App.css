@@ -1,4 +1,15 @@
-/* In your global stylesheet (e.g., styles.css or App.css) */
+body {
+  background-color: #fff;
+  color: #070707;
+  padding: 0;
+  margin: 0;
+}
+
+/* Dark mode styles */
+.dark body {
+  background-color: #1a202c;
+  color: #e2e8f0;
+}
 
 .tiptap-content pre {
   background-color: #f5f5f5; /* Desired background color */
@@ -29,28 +40,3 @@
   background-color: #f2f2f2; /* Optional: Add a background color for header cells */
 }
 
-/* Custom Scrollbar Styles */
-
-/* For WebKit-based browsers (Chrome, Safari) */
-.scrollable-content::-webkit-scrollbar {
-  width: 12px; /* Width of the scrollbar */
-}
-
-.scrollable-content::-webkit-scrollbar-track {
-  background: #ffffff; /* Background color of the track */
-}
-
-.scrollable-content::-webkit-scrollbar-thumb {
-  background: #ffffff; /* Background color of the thumb (scroll handle) */
-  border-radius: 20px; /* Rounded corners for the thumb */
-}
-
-.scrollable-content::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Background color of the thumb on hover */
-}
-
-/* For Firefox */
-.scrollable-content {
-  scrollbar-width: thin; /* Width of the scrollbar */
-  scrollbar-color: #05d161 #f1f1f1; /* Thumb and track color */
-}

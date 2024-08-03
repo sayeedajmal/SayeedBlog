@@ -1,8 +1,13 @@
-import "./App.css";
+import React from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Navbar from "./component/Navbar";
+import PostCard from "./component/PostCard";
+import AllPosts from "./container/AllPosts";
+import Dashboard from "./container/Dashboard";
 import EditBlog from "./container/EditBlog";
 import ShowBlog from "./container/ShowBlog";
-import PostCard from "./component/PostCard"
-import AllPosts from "./container/AllPosts";
+
+// Sample blog data for demonstration
 const sampleBlogData = {
   _id: "78a42ad4",
   title: "A Complete Guide On How To Start Blogging On Medium In 2024",
@@ -22,12 +27,19 @@ const sampleBlogData = {
 
 function App() {
   return (
-    <div className="App">
-      {/* <ShowBlog blogData={sampleBlogData} /> */}
-      {/* <EditBlog /> */}
-      {/* <PostCard /> */}
-      <AllPosts/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/blog" element={<AllPosts />} />
+
+        {/*  <Route
+          path="/blog"
+          element={<ShowBlog blogData={sampleBlogData} />}
+        /> */}
+        <Route path="/edit" element={<EditBlog />} />
+        <Route path="/postcard" element={<PostCard />} />
+      </Routes>
+    </Router>
   );
 }
 

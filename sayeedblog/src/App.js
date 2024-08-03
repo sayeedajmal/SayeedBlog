@@ -1,6 +1,8 @@
 import "./App.css";
 import EditBlog from "./container/EditBlog";
 import ShowBlog from "./container/ShowBlog";
+import PostCard from "./component/PostCard"
+import AllPosts from "./container/AllPosts";
 const sampleBlogData = {
   _id: "78a42ad4",
   title: "A Complete Guide On How To Start Blogging On Medium In 2024",
@@ -9,7 +11,7 @@ const sampleBlogData = {
   authorId: "AuthorABC",
   createdAt: "2024-08-02T21:14:35",
   updatedAt: null,
-  category:"Science",
+  category: "Science",
   comments: null,
   likes: null,
   tags: ["Medium", "Medium.com", "Blogging"],
@@ -21,8 +23,10 @@ const sampleBlogData = {
 function App() {
   return (
     <div className="App">
-      <ShowBlog blogData={sampleBlogData} />
-      <EditBlog />
+      {/* <ShowBlog blogData={sampleBlogData} /> */}
+      {/* <EditBlog /> */}
+      {/* <PostCard /> */}
+      <AllPosts/>
     </div>
   );
 }

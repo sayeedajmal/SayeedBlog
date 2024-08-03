@@ -51,6 +51,18 @@ public class PostService {
         return postRepo.findById(postId).orElseThrow(() -> new BlogException("Cant' Found Post by postId: " + postId));
     }
 
+    public List<Posts> findPostByAuthorId(String authorId) throws BlogException {
+        return postRepo.findByAuthorId(authorId);
+    }
+
+    public List<Posts> findPostByTitle(String title) throws BlogException {
+        return postRepo.findByTitle(title);
+    }
+
+    public List<Posts> findPostByTags(String tag) throws BlogException {
+        return postRepo.findByTags(tag);
+    }
+
     @Transactional
     public Posts updatePostById(String postId, Posts newPost) throws BlogException {
         Query query = new Query(Criteria.where("_id").is(postId));

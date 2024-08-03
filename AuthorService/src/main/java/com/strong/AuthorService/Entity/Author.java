@@ -23,6 +23,8 @@ public class Author {
 
     private String bio;
 
+    private String password;
+
     private String profilePicture;
 
     private List<String> blogPosts;

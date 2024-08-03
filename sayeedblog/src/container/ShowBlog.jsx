@@ -1,8 +1,48 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import AuthorBadge from "../component/AuthorBadge";
 import Navbar from "../component/Navbar";
 
-const ShowBlog = ({ blogData }) => {
+const ShowBlog = () => {
+  const { postId } = useParams();
+  const [blogData, setBlogData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/post/byPostId?postId=${postId}`);
+        setBlogData(response.data);
+      } catch (err) {
+        setError("Failed to fetch blog data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogData();
+  }, [postId, BASE_URL]);
+
+  if (loading)
+    return (
+      <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>
+    );
+  if (error)
+    return (
+      <p className="text-center text-red-500 dark:text-red-400">{error}</p>
+    );
+  if (!blogData)
+    return (
+      <p className="text-center text-gray-500 dark:text-gray-400">
+        Blog not found.
+      </p>
+    );
+
   const { title, summary, authorId, content, tags, category } = blogData;
 
   return (

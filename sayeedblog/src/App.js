@@ -36,7 +36,7 @@ function App() {
           path="/blog"
           element={<ShowBlog blogData={sampleBlogData} />}
         /> */}
-        <Route path="/edit" element={<EditBlog />} />
+        <Route path="/NewBlog" element={<EditBlog />} />
         <Route path="/postcard" element={<PostCard />} />
       </Routes>
     </Router>

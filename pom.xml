@@ -9,11 +9,12 @@
 
     <modules>
         <module>PostService</module>
+        <module>AuthorService</module>
+
     </modules>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Boot dependencies -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>

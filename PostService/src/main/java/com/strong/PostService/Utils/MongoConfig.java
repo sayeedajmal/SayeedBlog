@@ -10,6 +10,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
 
+import feign.codec.ErrorDecoder;
+
 @Configuration
 public class MongoConfig {
 
@@ -21,5 +23,10 @@ public class MongoConfig {
     @Bean
     PlatformTransactionManager transactionManager(MongoDatabaseFactory dbFactory) {
         return new MongoTransactionManager(dbFactory);
+    }
+
+    @Bean
+    public ErrorDecoder errorDecoder() {
+        return new FeignErrorDecoder();
     }
 }

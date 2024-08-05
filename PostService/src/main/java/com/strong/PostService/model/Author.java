@@ -1,25 +1,30 @@
 package com.strong.PostService.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Document
 @NoArgsConstructor
-public class Tags {
-
+public class Author {
     @Id
-    private String tagId;
+    private String _id;
 
-    @NonNull
     private String name;
-    
-    @NonNull
-    private String createdAt;
+
+    private String email;
+
+    private String bio;
+
+    private String password;
+
+    private String profilePicture;
+
+    private List<String> blogPosts;
+
 }

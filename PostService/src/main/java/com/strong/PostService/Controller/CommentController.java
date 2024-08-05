@@ -17,6 +17,7 @@ import com.strong.PostService.Service.CommentService;
 import com.strong.PostService.Utils.BlogException;
 import com.strong.PostService.model.Comments;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
@@ -26,6 +27,7 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("comment")
+    @Transactional
     public ResponseEntity<?> CreateComment(@RequestBody @Valid Comments comment) throws BlogException {
         comment.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         return new ResponseEntity<>(commentService.SaveComment(comment), HttpStatus.CREATED);
@@ -47,6 +49,7 @@ public class CommentController {
     }
 
     @DeleteMapping("byId")
+    @Transactional
     public ResponseEntity<?> removeById(@RequestParam("cmtId") String cmtId) throws BlogException {
         commentService.removeCmtById(cmtId);
         return new ResponseEntity<>(HttpStatus.OK);

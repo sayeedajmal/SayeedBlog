@@ -15,6 +15,7 @@ import com.strong.PostService.Service.LikeService;
 import com.strong.PostService.Utils.BlogException;
 import com.strong.PostService.model.Likes;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
@@ -23,6 +24,7 @@ public class LikeController {
     @Autowired
     private LikeService likeService;
 
+    @Transactional
     @PostMapping("like")
     public ResponseEntity<?> saveLike(@RequestBody @Valid Likes like) throws BlogException {
         like.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));

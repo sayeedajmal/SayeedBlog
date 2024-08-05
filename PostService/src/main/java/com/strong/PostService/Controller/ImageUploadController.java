@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.strong.PostService.Service.ImageStorageService;
 import com.strong.PostService.Utils.BlogException;
 
+import jakarta.transaction.Transactional;
+
 @RestController
 @RequestMapping("/api/images")
 public class ImageUploadController {
@@ -28,6 +30,7 @@ public class ImageUploadController {
     @Autowired
     private ImageStorageService imageStorageService;
 
+    @Transactional
     @PostMapping("/upload")
     public List<String> uploadImages(@RequestParam("files") MultipartFile[] files) {
         List<String> fieldId = new ArrayList<>();
@@ -51,6 +54,7 @@ public class ImageUploadController {
         return new ResponseEntity<>(imageStorageService.listAllImages(), HttpStatus.OK);
     }
 
+    @Transactional
     @DeleteMapping("byId")
     public ResponseEntity<?> removeImgById(@RequestParam("imgId") String filedId) {
         imageStorageService.deleteImage(filedId);

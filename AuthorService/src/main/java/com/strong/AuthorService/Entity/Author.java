@@ -1,7 +1,5 @@
 package com.strong.AuthorService.Entity;
 
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -35,7 +33,5 @@ public class Author {
 
     @NonNull
     private String profilePicture;
-
-    private List<String> blogPosts;
 
 }

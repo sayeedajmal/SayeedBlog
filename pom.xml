@@ -10,7 +10,6 @@
     <modules>
         <module>PostService</module>
         <module>AuthorService</module>
-
     </modules>
 
     <dependencyManagement>

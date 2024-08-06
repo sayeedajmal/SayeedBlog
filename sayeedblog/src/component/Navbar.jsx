@@ -18,12 +18,7 @@ const Navbar = () => {
   const toggleMenu = () => setMenuOpen(!isMenuOpen);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
+    document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -32,7 +27,12 @@ const Navbar = () => {
   return (
     <div className="bg-white dark:bg-gray-800 w-full py-2 rounded-md border-b-2 border-b-slate-100 dark:border-b-gray-600">
       <div className="container mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-8">
-        <img src={img} alt="Logo" className="h-8 w-8 bg-cover rounded-full" />
+        {/* Logo */}
+        <Link to="/">
+          <img src={img} alt="Logo" className="h-8 w-8 bg-cover rounded-full" />
+        </Link>
+
+        {/* Navigation Links for larger screens */}
         <div className="flex-1 flex justify-center">
           <ul className="hidden md:flex md:items-center md:space-x-4">
             {navContent.map((item) => (
@@ -42,14 +42,19 @@ const Navbar = () => {
             ))}
           </ul>
         </div>
+
+        {/* Profile and Dark Mode Toggle */}
         <div className="flex items-center space-x-3">
-          <img
-            src={img}
-            alt="Login"
-            className="h-8 w-8 bg-cover rounded-full"
-          />
+          <Link to="/Setting">
+            <img
+              src={img}
+              alt="Settings"
+              className="h-8 w-8 bg-cover rounded-full cursor-pointer"
+            />
+          </Link>
           <DarkMode />
         </div>
+
         {/* Mobile Menu Button */}
         <button
           className="md:hidden p-2"

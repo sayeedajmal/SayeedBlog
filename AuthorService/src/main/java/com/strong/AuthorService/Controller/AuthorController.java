@@ -2,7 +2,6 @@ package com.strong.AuthorService.Controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,13 +17,13 @@ import com.strong.AuthorService.Entity.Author;
 import com.strong.AuthorService.Service.AuthorService;
 import com.strong.AuthorService.Utils.AuthorException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/api/author")
 public class AuthorController {
 
-    @Autowired
     private AuthorService authorService;
 
     @GetMapping("/all")
@@ -38,9 +37,15 @@ public class AuthorController {
     }
 
     @Transactional
-    @PostMapping("/createAuthor")
-    public ResponseEntity<Author> createAuthor(@RequestBody Author author) throws AuthorException {
-        return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
+    @PostMapping("/signup")
+    public ResponseEntity<String> createAuthor(@RequestBody Author author) throws AuthorException {
+        return new ResponseEntity<>(authorService.signUp(author), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(
+            @RequestBody Author author) throws AuthorException {
+        return ResponseEntity.ok(authorService.authenticate(author));
     }
 
     @Transactional
@@ -56,8 +61,13 @@ public class AuthorController {
 
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAuthor(@PathVariable String id) {
+    public ResponseEntity<Void> deleteAuthor(@PathVariable String id) throws AuthorException {
         authorService.deleteAuthor(id);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<String> refreshToken(HttpServletRequest request) throws AuthorException {
+        return authorService.refreshToken(request);
     }
 }

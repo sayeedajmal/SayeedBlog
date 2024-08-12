@@ -26,6 +26,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.strong.AuthorService.Service.AuthorService;
 
+/**
+ * Security configuration class for setting up the security aspects of the
+ * application.
+ * This class configures security settings such as CORS, CSRF, authentication,
+ * and authorization.
+ * It uses the Spring Security framework to define a security filter chain and
+ * other security-related beans.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
@@ -39,14 +47,28 @@ public class SecurityConfig {
 
     private final AuthorService authorService;
     private final JwtRequestFilter jwtRequestFilter;
+
     @Autowired
     private CustomLogoutHandler logoutHandler;
 
+    /**
+     * Constructor for SecurityConfig.
+     *
+     * @param authorService    the service used for user authentication.
+     * @param jwtRequestFilter the filter for JWT-based authentication.
+     */
     public SecurityConfig(@Lazy AuthorService authorService, JwtRequestFilter jwtRequestFilter) {
         this.authorService = authorService;
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
+    /**
+     * Configures the security filter chain with custom settings.
+     * 
+     * @param http the HttpSecurity object to configure.
+     * @return the configured SecurityFilterChain.
+     * @throws Exception if an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -55,7 +77,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/accessToken").permitAll()
                         .requestMatchers("/api/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .userDetailsService(authorService)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -67,6 +89,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Provides the CORS configuration source for the application.
+     * 
+     * @return the CORS configuration source.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -80,11 +107,25 @@ public class SecurityConfig {
         return request -> config;
     }
 
+    /**
+     * Provides a PasswordEncoder bean using BCrypt hashing.
+     * 
+     * @return a BCryptPasswordEncoder instance.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Provides an AuthenticationManager bean.
+     * 
+     * @param configuration the AuthenticationConfiguration used to build the
+     *                      AuthenticationManager.
+     * @return the configured AuthenticationManager.
+     * @throws Exception if an error occurs while building the
+     *                   AuthenticationManager.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

@@ -1,6 +1,7 @@
 package com.strong.AuthorService.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.strong.AuthorService.Entity.Author;
 import com.strong.AuthorService.Entity.Token;
@@ -44,6 +46,9 @@ public class AuthorService implements UserDetailsService {
     @Autowired
     private TokenRepository tokenRepository;
 
+    @Autowired
+    private ImageStorageService imageStorageService;
+
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
@@ -58,10 +63,19 @@ public class AuthorService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Author not found"));
     }
 
-    public String signUp(Author author) throws AuthorException {
-        if (authorRepository.findByEmail(author.getEmail()).isPresent()) {
+    public String signUp(Author author, MultipartFile profilePicture) throws AuthorException {
+        Optional<Author> existingAuthor = authorRepository.findByEmail(author.getEmail());
+        if (existingAuthor.isPresent()) {
             throw new AuthorException("Email already in use: " + author.getEmail());
         }
+
+        if (profilePicture == null || profilePicture.isEmpty()) {
+            throw new AuthorException("Profile picture must be provided");
+        }
+
+        String fileId = imageStorageService.uploadImage(profilePicture);
+        author.setProfilePicture(fileId);
+
         author.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         author.setPassword(passwordEncoder.encode(author.getPassword()));
         author.setAuthorities(List.of("AUTHOR"));

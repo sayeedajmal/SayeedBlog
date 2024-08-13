@@ -39,10 +39,10 @@ import com.strong.AuthorService.Service.AuthorService;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Value("${bloodDonation.Cors.Url}")
+    @Value("${Author.Cors.Url}")
     private String CORS_URL;
 
-    @Value("${bloodDonation.Cors.Methods}")
+    @Value("${Author.Cors.Methods}")
     private String CORS_METHODS;
 
     private final AuthorService authorService;

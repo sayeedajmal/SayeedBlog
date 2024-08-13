@@ -1,0 +1,17 @@
+FROM openjdk:17-alpine
+
+WORKDIR /app
+
+COPY target/AuthorService.jar /app/AuthorService.jar
+COPY BlogService.p12 /app/BlogService.p12
+EXPOSE 443
+
+ENV JWT_SECRET=${JWT_SECRET}
+ENV JWT_TOKEN_VALIDITY_IN_SECONDS=${JWT_TOKEN_VALIDITY_IN_SECONDS}
+ENV JWT_TOKEN_REFRESH_IN_SECONDS=${JWT_TOKEN_REFRESH_IN_SECONDS}
+ENV BlogUrl=${BlogUrl}
+ENV BlogDB=${BlogDB}
+ENV CORS_URL=${CORS_URL}
+ENV CORS_METHODS=${CORS_METHODS}
+
+ENTRYPOINT ["java","-jar","/app/AuthorService.jar"]

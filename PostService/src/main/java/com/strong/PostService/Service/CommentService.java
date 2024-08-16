@@ -23,76 +23,76 @@ public class CommentService {
 
     @Autowired
     private CommentRepo commentRepo;
+
     @Autowired
     private MongoTemplate mongoTemplate;
 
     @Transactional
-    public Comments SaveComment(Comments comment) throws BlogException {
+    public Comments saveComment(Comments comment) throws BlogException {
         comment.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         comment.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
         comment.setUpdatedAt(null);
-        addComment(comment);
+        addCommentToPost(comment);
         return commentRepo.save(comment);
     }
 
     @Transactional
-    public void addComment(Comments cmt) throws BlogException {
-        /* First get Post then push the commentId to post */
-        Query query = new Query(Criteria.where("_id").is(cmt.getPostId()));
+    public void addCommentToPost(Comments comment) throws BlogException {
+        Query query = new Query(Criteria.where("_id").is(comment.getPostId()));
 
         Posts post = mongoTemplate.findOne(query, Posts.class);
         if (post == null) {
-            throw new BlogException("Can't find post by PostId: " + cmt.getPostId());
+            throw new BlogException("Can't find post with PostId: " + comment.getPostId());
         }
-        Update update = new Update().addToSet("comments", cmt.get_id());
+        Update update = new Update().addToSet("comments", comment.get_id());
         mongoTemplate.updateFirst(query, update, Posts.class);
     }
 
     public List<Comments> getAllByPostId(String postId) throws BlogException {
-        List<Comments> byPostId = commentRepo.findByPostId(postId);
-        if (!byPostId.isEmpty()) {
-            return byPostId;
-        } else {
-            throw new BlogException("Can't Found Comment by PostId : " + postId);
+        List<Comments> comments = commentRepo.findByPostId(postId);
+        if (comments.isEmpty()) {
+            throw new BlogException("No comments found for PostId: " + postId);
         }
+        return comments;
     }
 
     public long countCmt(String postId) {
-        return commentRepo.countBypostId(postId);
+        return commentRepo.countByPostId(postId);
+    }
+
+    public List<Comments> findByPostAndAuthor(String postId, String authorId) {
+        return null;
     }
 
     public Comments findCmtById(String cmtId) throws BlogException {
         return commentRepo.findById(cmtId)
-                .orElseThrow(() -> new BlogException("Cant' Found Comment by postId: " + cmtId));
+                .orElseThrow(() -> new BlogException("Comment not found with ID: " + cmtId));
     }
 
-    public Comments findByUserId(String userId) throws BlogException {
-        return commentRepo.findById(userId)
-                .orElseThrow(() -> new BlogException("Cant' Found Comment by postId: " + userId));
+    public List<Comments> findByAuthor(String userId) {
+        return null;
     }
 
     @Transactional
     public void removeCmtById(String cmtId) throws BlogException {
-        Comments byId = commentRepo.findById(cmtId)
-                .orElseThrow(() -> new BlogException("Can't Found Comment_Id : " + cmtId));
+        Comments comment = findCmtById(cmtId);
 
-        // Remove From Post Object
-        Query query = new Query(Criteria.where("_id").is(byId.getPostId()));
+        // Remove comment ID from the associated post
+        Query query = new Query(Criteria.where("_id").is(comment.getPostId()));
         Posts post = mongoTemplate.findOne(query, Posts.class);
         if (post == null) {
-            throw new BlogException("Can't find post by PostId: " + byId.getPostId());
+            throw new BlogException("Can't find post with PostId: " + comment.getPostId());
         }
-        // Removing the cmtId
-        Update update = new Update().pull("comments", byId.get_id());
+        Update update = new Update().pull("comments", comment.get_id());
         mongoTemplate.updateFirst(query, update, Posts.class);
-        commentRepo.delete(byId);
+
+        commentRepo.delete(comment);
     }
 
     @Transactional
-    public void updateCmt(Comments cmt) throws BlogException {
-        Comments existingComment = commentRepo.findById(cmt.get_id())
-                .orElseThrow(() -> new BlogException("Can't find comment by ID: " + cmt.get_id()));
-        existingComment.setContent(cmt.getContent());
+    public void updateCmt(Comments comment) throws BlogException {
+        Comments existingComment = findCmtById(comment.get_id());
+        existingComment.setContent(comment.getContent());
         existingComment.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
 
         commentRepo.save(existingComment);

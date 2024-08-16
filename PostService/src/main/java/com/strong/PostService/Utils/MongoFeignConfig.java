@@ -13,7 +13,7 @@ import com.mongodb.client.gridfs.GridFSBuckets;
 import feign.codec.ErrorDecoder;
 
 @Configuration
-public class MongoConfig {
+public class MongoFeignConfig {
 
     @Bean
     public GridFSBucket gridFSBucket(MongoClient mongoClient, MongoDatabaseFactory mongoDatabaseFactory) {
@@ -29,4 +29,5 @@ public class MongoConfig {
     public ErrorDecoder errorDecoder() {
         return new FeignErrorDecoder();
     }
+
 }

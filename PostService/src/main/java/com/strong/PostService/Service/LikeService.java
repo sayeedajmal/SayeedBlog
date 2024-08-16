@@ -29,25 +29,46 @@ public class LikeService {
     private MongoTemplate mongoTemplate;
 
     @Transactional
-    public void toggleLike(Likes like) throws BlogException {
-        /* First get Post then push the userId to post */
+    public long toggleLike(Likes like) throws BlogException {
+        if (like == null) {
+            throw new IllegalArgumentException("Like cannot be null");
+        }
+
+        // Query to find the post by ID
         Query query = new Query(Criteria.where("_id").is(like.getPostId()));
 
+        // Fetch the post from the database
         Posts post = mongoTemplate.findOne(query, Posts.class);
         if (post == null) {
             throw new BlogException("Can't find post by PostId: " + like.getPostId());
         }
 
-        Update update;
-        if (like != null && post.getLikes() != null && post.getLikes().contains(like.getUserId())) {
-            update = new Update().pull("likes", like.getUserId());
+        // Create an update object
+        Update update = new Update();
+        boolean isLiked = post.getLikes() != null && post.getLikes().contains(like.getUserId());
+
+        // Toggle logic
+        if (isLiked) {
+            // User has already liked the post; remove the like
+            update.pull("likes", like.getUserId());
             removeLike(like.getUserId());
         } else {
+            // User has not liked the post; add the like
+            update.addToSet("likes", like.getUserId());
             saveLike(like);
-            update = new Update().addToSet("likes", like.getUserId());
         }
 
+        // Update the post in the database
         mongoTemplate.updateFirst(query, update, Posts.class);
+
+        // Fetch the updated post to get the new like count
+        Posts updatedPost = mongoTemplate.findOne(query, Posts.class);
+        if (updatedPost == null) {
+            throw new BlogException("Can't find updated post by PostId: " + like.getPostId());
+        }
+
+        // Return the total count of likes after the operation
+        return updatedPost.getLikes() != null ? updatedPost.getLikes().size() : 0;
     }
 
     @Transactional

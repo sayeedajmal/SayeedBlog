@@ -1,6 +1,7 @@
 package com.strong.AuthorService.Utils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -66,6 +67,16 @@ public class JwtUtil {
                 .orElse(false);
 
         return (email.equals(author.getUsername())) && !isTokenExpired(token) && validToken;
+    }
+
+    // USE VALIDATION OF SEVICE-TO-SERVICE 
+    public boolean isValid(String token) {
+        return !isTokenExpired(token) && hasRole(token, "SERVICE_ACCOUNT");
+    }
+
+    public boolean hasRole(String token, String role) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("roles", List.class).contains(role);
     }
 
     /**

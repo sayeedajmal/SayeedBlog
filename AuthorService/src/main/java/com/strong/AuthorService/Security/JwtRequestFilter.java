@@ -62,8 +62,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
      * @throws IOException      if an I/O error occurs during request processing.
      */
     @Override
-    protected void doFilterInternal(@SuppressWarnings("null") HttpServletRequest request,
-            @SuppressWarnings("null") HttpServletResponse response, @SuppressWarnings("null") FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
@@ -77,22 +76,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             username = jwtUtil.extractUserEmail(jwt);
         }
 
-        // If a username is extracted and no authentication is set in the
-        // SecurityContext
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // Load user details
             UserDetails userDetails = authorService.loadUserByUsername(username);
-
-            // Validate the JWT
             if (jwtUtil.isValid(jwt, userDetails)) {
-                // Create authentication token and set it in the SecurityContext
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
-        // Continue with the next filter in the chain
+
         chain.doFilter(request, response);
     }
+
 }

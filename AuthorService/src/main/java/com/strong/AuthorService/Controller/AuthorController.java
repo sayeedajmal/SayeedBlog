@@ -1,11 +1,15 @@
 package com.strong.AuthorService.Controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +41,53 @@ public class AuthorController {
 
     @Autowired
     private AuthorService authorService;
+
+    @GetMapping("/validateToken/{token}")
+    @PreAuthorize("hasAuthority('AUTHOR') or hasAuthority('ADMIN')")
+    public ResponseEntity<JwtValidationResponse> validateToken(
+            @PathVariable("token") String token,
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+        // Get the current authentication token from the SecurityContext
+        UsernamePasswordAuthenticationToken authToken = (UsernamePasswordAuthenticationToken) SecurityContextHolder
+                .getContext().getAuthentication();
+
+        if (authToken != null && authToken.isAuthenticated()) {
+            String username = authToken.getName();
+            List<String> roles = authToken.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+            JwtValidationResponse response = new JwtValidationResponse();
+            response.setUsername(username);
+            response.setRoles(roles);
+
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.status(401).build();
+    }
+
+    class JwtValidationResponse {
+        private String username;
+        private List<String> roles;
+
+        // Getters and setters
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public List<String> getRoles() {
+            return roles;
+        }
+
+        public void setRoles(List<String> roles) {
+            this.roles = roles;
+        }
+    }
 
     /**
      * GET endpoint to retrieve a list of all authors.
@@ -63,6 +115,21 @@ public class AuthorController {
     @GetMapping("/{id}")
     public ResponseEntity<Author> getAuthorById(@PathVariable String id) throws AuthorException {
         return new ResponseEntity<>(authorService.getAuthorById(id), HttpStatus.OK);
+    }
+
+    /**
+     * GET endpoint to retrieve an author by their email.
+     *
+     * @param email The unique identifier of the author to be retrieved.
+     * @return A {@link ResponseEntity} containing the author object and an HTTP
+     *         status code 200 (OK). Access is restricted to users with the 'AUTHOR'
+     *         or 'ADMIN' authority.
+     * @throws AuthorException if the author with the specified email is not found.
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/{email}")
+    public ResponseEntity<Author> getAuthorByEmail(@PathVariable String email) throws AuthorException {
+        return new ResponseEntity<>(authorService.findByEmail(email), HttpStatus.OK);
     }
 
     /**

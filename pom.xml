@@ -10,6 +10,7 @@
     <modules>
         <module>PostService</module>
         <module>AuthorService</module>
+        <module>blogservicediscovery</module>
     </modules>
 
     <dependencyManagement>

@@ -12,7 +12,6 @@ ENV BlogUrl=${BlogUrl}
 ENV BlogDB=${BlogDB}
 ENV CORS_URL=${CORS_URL}
 ENV CORS_METHODS=${CORS_METHODS}
-ENV FileSize=${FileSize}
 ENV MicroZone=${MicroZone}
 
-ENTRYPOINT ["java","-jar","/app/AuthorService.jar"]
+ENTRYPOINT ["java","-jar","AuthorService.jar"]

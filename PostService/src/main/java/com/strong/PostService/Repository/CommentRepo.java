@@ -13,8 +13,14 @@ public interface CommentRepo extends MongoRepository<Comments, String> {
 
     List<Comments> findByPostId(String postId);
 
-    List<Comments> findByUserId(String userId);
+   /*  @Query("{ 'author._id': ?0 }")
+    List<Comments> findByAuthorId(String authorId); */
 
     @Query("{ 'postId': ?0 }")
-    long countBypostId(String postId);
+    long countByPostId(String postId);
+
+    /*
+     * @Query("{ 'postId': ?0, 'author.author_Id': ?1 }")
+     * List<Comments> findByPostIdAndAuthorId(String postId, String authorId);
+     */
 }

@@ -29,10 +29,6 @@ import com.strong.AuthorService.Service.AuthorService;
 /**
  * Security configuration class for setting up the security aspects of the
  * application.
- * This class configures security settings such as CORS, CSRF, authentication,
- * and authorization.
- * It uses the Spring Security framework to define a security filter chain and
- * other security-related beans.
  */
 @Configuration
 @EnableWebSecurity
@@ -77,7 +73,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/accessToken").permitAll()
                         .requestMatchers("/api/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        .anyRequest().permitAll())
+                        // Adjust the security for service-to-service communication
+                        .requestMatchers("/api/author/**").authenticated()
+                        .anyRequest().authenticated()) // Ensure all other endpoints are secured
                 .userDetailsService(authorService)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

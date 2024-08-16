@@ -2,6 +2,7 @@ package com.strong.PostService.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Getter;
@@ -21,8 +22,9 @@ public class Comments {
     @Indexed(unique = true)
     private String postId;
 
+    @DBRef
     @NonNull
-    private String userId;
+    private Author author;
 
     @NonNull
     private String content;

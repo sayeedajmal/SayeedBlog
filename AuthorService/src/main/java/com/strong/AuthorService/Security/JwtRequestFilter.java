@@ -20,10 +20,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * JwtRequestFilter is a Spring Security filter that intercepts HTTP requests to
- * handle
- * JWT-based authentication. It extends OncePerRequestFilter to ensure that it
- * processes
- * each request only once per request cycle.
+ * handle JWT-based authentication. It extends OncePerRequestFilter to ensure
+ * that it
+ * processes each request only once per request cycle.
  * <p>
  * This filter extracts the JWT from the "Authorization" header, validates it,
  * and sets the
@@ -51,8 +50,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
      * 
      * <p>
      * This method extracts the JWT from the "Authorization" header, validates it,
-     * and sets the
-     * authentication information in the SecurityContext if the token is valid.
+     * and sets the authentication information in the SecurityContext if the token
+     * is valid.
      * 
      * @param request  the HTTP request containing the JWT in the "Authorization"
      *                 header.
@@ -67,26 +66,28 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        String username = null;
-        String jwt = null;
-
-        // Check if the Authorization header is present and starts with "Bearer "
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
-            username = jwtUtil.extractUserEmail(jwt);
-        }
+            String jwt = authHeader.substring(7);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = authorService.loadUserByUsername(username);
-            if (jwtUtil.isValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            try {
+                String username = jwtUtil.extractUserEmail(jwt);
+                UserDetails userDetails = authorService.loadUserByUsername(username);
+
+                if (userDetails != null && jwtUtil.isValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+
+            } catch (Exception e) {
+                // Handle the exception and send an unauthorized response
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write(e.getLocalizedMessage());
+                return;
             }
         }
 
         chain.doFilter(request, response);
     }
-
 }

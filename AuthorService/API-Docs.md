@@ -43,6 +43,18 @@
 - **Access:** Restricted to users with the `'AUTHOR'` or `'ADMIN'` authority.
 - **Throws:** `AuthorException` if the author with the specified ID is not found.
 
+#### GET /email/{email}
+
+- **Description:** Retrieves an author by their email.
+- **Method:** `GET`
+- **Parameters:**
+  - `Path Variable:` `email` (String) - The unique email of the author.
+- **Response:**
+  - **Body:** Author object
+  - **HTTP Status Code:** `200 OK`
+- **Access:** Restricted to users with the `'AUTHOR'` or `'ADMIN'` authority.
+- **Throws:** `AuthorException` if the author with the specified ID is not found.
+
 #### POST /signup
 
 - **Description:** Creates a new author.

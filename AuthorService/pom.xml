@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.strong</groupId>
 	<artifactId>author_service</artifactId>
-	<version>1.0</version>
+	<version>1.2</version>
 	<name>AuthorService</name>
 	<description>MicroService For SayeedBlog</description>
 	<url/>

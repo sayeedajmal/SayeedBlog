@@ -1,20 +1,23 @@
 package com.strong.AuthorService.Utils;
 
 import java.util.Date;
-import java.util.List;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.strong.AuthorService.Entity.Author;
 import com.strong.AuthorService.Repository.TokenRepository;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -67,16 +70,6 @@ public class JwtUtil {
                 .orElse(false);
 
         return (email.equals(author.getUsername())) && !isTokenExpired(token) && validToken;
-    }
-
-    // USE VALIDATION OF SEVICE-TO-SERVICE 
-    public boolean isValid(String token) {
-        return !isTokenExpired(token) && hasRole(token, "SERVICE_ACCOUNT");
-    }
-
-    public boolean hasRole(String token, String role) {
-        Claims claims = extractAllClaims(token);
-        return claims.get("roles", List.class).contains(role);
     }
 
     /**
@@ -137,12 +130,18 @@ public class JwtUtil {
      * @return the extracted claims.
      */
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSigninKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts
+                    .parser()
+                    .verifyWith(getSigninKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "JWT token has expired", e);
+        } catch (JwtException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT token", e);
+        }
     }
 
     /**
@@ -173,15 +172,13 @@ public class JwtUtil {
      * @return the generated JWT token.
      */
     private String generateToken(Author author, long expireTime) {
-        String token = Jwts
+        return Jwts
                 .builder()
                 .subject(author.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expireTime))
                 .signWith(getSigninKey())
                 .compact();
-
-        return token;
     }
 
     /**

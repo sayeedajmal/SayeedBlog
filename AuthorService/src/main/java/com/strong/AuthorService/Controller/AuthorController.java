@@ -126,8 +126,8 @@ public class AuthorController {
      *         or 'ADMIN' authority.
      * @throws AuthorException if the author with the specified email is not found.
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/{email}")
+    @PreAuthorize("hasAuthority('AUTHOR') or hasAuthority('ADMIN')")
+    @GetMapping("/email/{email}")
     public ResponseEntity<Author> getAuthorByEmail(@PathVariable String email) throws AuthorException {
         return new ResponseEntity<>(authorService.findByEmail(email), HttpStatus.OK);
     }
@@ -186,7 +186,7 @@ public class AuthorController {
      * @throws AuthorException if there is an error during author update.
      */
     @Transactional
-    @PreAuthorize("hasAuthority('AUTHOR')")
+    @PreAuthorize("hasAuthority('AUTHOR') or hasAuthority('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Author> updateAuthor(@PathVariable String id, @RequestBody Author authorDetails)
             throws AuthorException {

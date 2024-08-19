@@ -148,7 +148,7 @@ public class AuthorService implements UserDetailsService {
         tokenRepository.save(token);
     }
 
-    public ResponseEntity<String> refreshToken(HttpServletRequest request) {
+    public ResponseEntity<String> refreshToken(HttpServletRequest request) throws AuthorException {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

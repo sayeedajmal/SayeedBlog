@@ -13,10 +13,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.strong.PostService.Repository.AuthorServiceClient;
 import com.strong.PostService.Repository.PostRepo;
 import com.strong.PostService.Utils.BlogException;
-import com.strong.PostService.model.Author;
 import com.strong.PostService.model.Posts;
 
 @Service
@@ -32,21 +30,14 @@ public class PostService {
     private MongoTemplate mongoTemplate;
     @Autowired
     private ImageStorageService imageStorageService;
-    @Autowired
-    private AuthorServiceClient authorServiceClient;
 
     @Transactional
     public Posts CreatePost(Posts post) throws BlogException {
-        Author authorById = authorServiceClient.getAuthorById(post.getAuthorId());
-        if (authorById != null) {
-            post.setAuthorId(authorById.get_id());
-            post.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
-            post.setUpdatedAt(null);
-            post.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
-            return postRepo.save(post);
-        } else {
-            throw new BlogException("Can't Find Author By ID: " + post.getAuthorId());
-        }
+        post.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
+        post.setUpdatedAt(null);
+        post.setCreatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+        return postRepo.save(post);
+
     }
 
     public List<Posts> getAllPosts() throws BlogException {

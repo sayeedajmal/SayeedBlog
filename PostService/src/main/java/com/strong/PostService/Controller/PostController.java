@@ -57,6 +57,7 @@ public class PostController {
      * @throws BlogException if an error occurs during retrieval
      */
     @GetMapping
+    @PreAuthorize("permitAll")
     public ResponseEntity<List<Posts>> getAllPosts() throws BlogException {
         List<Posts> posts = postService.getAllPosts();
         return new ResponseEntity<>(posts, HttpStatus.OK);

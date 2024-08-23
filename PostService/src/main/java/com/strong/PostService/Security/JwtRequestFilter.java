@@ -17,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.strong.PostService.Repository.AuthorServiceClient;
 import com.strong.PostService.Utils.JwtValidationResponse;
 
-import feign.FeignException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,18 +42,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 if (authResponse.getStatusCode().is2xxSuccessful()) {
                     JwtValidationResponse validationResponse = authResponse.getBody();
 
-                    List<GrantedAuthority> authorities = validationResponse.getRoles().stream()
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
+                    if (validationResponse != null) {
+                        List<GrantedAuthority> authorities = validationResponse.getRoles().stream()
+                                .map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toList());
 
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            validationResponse.getUsername(), null, authorities);
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                validationResponse.getUsername(), null, authorities);
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                } else {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                            "JWT token validation failed with status: " + authResponse.getStatusCode());
+                    return;
                 }
-            } catch (FeignException e) {
-                // Log or handle Feign exception
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        e.getCause().toString());
                 return;
             }
         }

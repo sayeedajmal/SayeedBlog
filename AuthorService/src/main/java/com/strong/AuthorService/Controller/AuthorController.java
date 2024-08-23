@@ -43,7 +43,6 @@ public class AuthorController {
     private AuthorService authorService;
 
     @GetMapping("/validateToken/{token}")
-    @PreAuthorize("hasAuthority('AUTHOR') or hasAuthority('ADMIN')")
     public ResponseEntity<JwtValidationResponse> validateToken(
             @PathVariable("token") String token,
             @RequestHeader("Authorization") String authorizationHeader) {

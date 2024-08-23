@@ -70,7 +70,7 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("validateToken/**").permitAll()
+                        .requestMatchers("/api/author/validateToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated())

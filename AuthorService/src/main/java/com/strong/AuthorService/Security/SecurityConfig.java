@@ -19,7 +19,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,6 +49,12 @@ public class SecurityConfig {
     @Autowired
     private CustomLogoutHandler logoutHandler;
 
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
     /**
      * Constructor for SecurityConfig.
      *
@@ -70,12 +78,10 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/accessToken").permitAll()
-                        .requestMatchers("/api/actuator/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/author/validateToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        // Adjust the security for service-to-service communication
-                        .requestMatchers("/api/author/**").authenticated()
-                        .anyRequest().authenticated()) // Ensure all other endpoints are secured
+                        .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated())
                 .userDetailsService(authorService)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -83,7 +89,10 @@ public class SecurityConfig {
                         .logoutUrl("/api/v1/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler(
-                                (request, response, authentication) -> SecurityContextHolder.clearContext()));
+                                (request, response, authentication) -> SecurityContextHolder.clearContext()))
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler));
         return http.build();
     }
 

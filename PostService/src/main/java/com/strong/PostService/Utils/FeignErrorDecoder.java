@@ -37,6 +37,6 @@ public class FeignErrorDecoder implements ErrorDecoder {
             return new BlogException("Failed to read response body", e);
         }
 
-        return new BlogException(response.status()+" ERROR ");
+        return new BlogException(String.valueOf(response.status()));
     }
 }

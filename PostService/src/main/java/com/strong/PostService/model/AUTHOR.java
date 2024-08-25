@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Author {
+public class AUTHOR {
     @Id
     private String _id;
 

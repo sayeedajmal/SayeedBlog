@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
  * REST controller for managing comments.
  */
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/comment")
 public class CommentController {
 
     @Autowired
@@ -43,7 +43,7 @@ public class CommentController {
      */
     @PostMapping
     @Transactional
-    @PreAuthorize("hasAuthority('Admin') or hasAuthority('Author')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AUTHOR')")
     public ResponseEntity<Comments> createComment(@RequestBody @Valid Comments comment) throws BlogException {
         comment.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         Comments savedComment = commentService.saveComment(comment);
@@ -104,7 +104,7 @@ public class CommentController {
      */
     @DeleteMapping("/{cmtId}")
     @Transactional
-    @PreAuthorize("hasAuthority('Admin')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> removeCommentById(@PathVariable String cmtId) throws BlogException {
         commentService.removeCmtById(cmtId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

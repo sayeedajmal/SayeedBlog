@@ -2,25 +2,25 @@
 
 ## Comment Controller
 
-**Base URL:** **`/api/comments`**
+**Base URL:** **`/api/comment`**
 
 ### Endpoints
 
-#### **POST** `/api/comments`
+#### **POST** `/api/comment`
 
 - **Description:** Creates a new comment for a specified post.
 - **Request Body:**
   - `postId` (String) - The ID of the post for which the comment is being created.
-  - `author` (Author) - The author of the comment.
+  - `author` (AUTHOR) - The author of the comment.
   - `content` (String) - The content of the comment.
   - `createdAt` (String, ISO8601 DateTime) - The creation date and time of the comment.
 - **Response:**
   - **Body:** The created comment object.
   - **HTTP Status Code:** `201 Created`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if there is an error creating the comment.
 
-#### **GET** `/api/comments`
+#### **GET** `/api/comment`
 
 - **Description:** Retrieves all comments for a specific post.
 - **Parameters:**
@@ -31,7 +31,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if an error occurs while retrieving comments.
 
-#### **GET** `/api/comments/{cmtId}`
+#### **GET** `/api/comment/{cmtId}`
 
 - **Description:** Retrieves a comment by its ID.
 - **Parameters:**
@@ -42,7 +42,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if the comment with the specified ID is not found.
 
-#### **GET** `/api/comments/user/{userId}`
+#### **GET** `/api/comment/user/{userId}`
 
 - **Description:** Retrieves all comments made by a specific user.
 - **Parameters:**
@@ -53,17 +53,17 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if an error occurs while retrieving comments.
 
-#### **DELETE** `/api/comments/{cmtId}`
+#### **DELETE** `/api/comment/{cmtId}`
 
 - **Description:** Deletes a comment by its ID.
 - **Parameters:**
   - `Path Variable:` `cmtId` (String) - The ID of the comment to be deleted.
 - **Response:**
   - **HTTP Status Code:** `204 No Content`
-- **Security:** `Admin` role required.
+- **Security:** `ADMIN` role required.
 - **Throws:** `BlogException` if the comment with the specified ID is not found.
 
-#### **GET** `/api/comments/count`
+#### **GET** `/api/comment/count`
 
 - **Description:** Counts the number of comments for a specific post.
 - **Parameters:**
@@ -90,7 +90,7 @@
 - **Response:**
   - **Body:** List of IDs or URLs of the uploaded images.
   - **HTTP Status Code:** `200 OK`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `IOException` if there is an error during file upload.
 
 #### **GET** `/api/images/{fileId}`
@@ -110,7 +110,7 @@
 - **Response:**
   - **Body:** List of all uploaded images.
   - **HTTP Status Code:** `200 OK`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 
 #### **DELETE** `/api/images/{fileId}`
 
@@ -119,30 +119,29 @@
   - `Path Variable:` `fileId` (String) - The ID of the image to be deleted.
 - **Response:**
   - **HTTP Status Code:** `200 OK`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if the image with the specified ID is not found.
 
 ---
 
 ## Like Controller
 
-**Base URL:** **`/api/likes`**
+**Base URL:** **`/api/like`**
 
 ### Endpoints
 
-#### **POST** `/api/likes/toggle`
+#### **POST**
 
 - **Description:** Toggles a like for a specific post by a user.
 - **Request Body:**
-  - `postId` (String) - The ID of the post.
-  - `userId` (String) - The ID of the user who is liking or unliking the post.
+  - `Like` (Object) - The Like Object.
 - **Response:**
   - **Body:** The updated like status.
   - **HTTP Status Code:** `200 OK`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if an error occurs while toggling the like.
 
-#### **GET** `/api/likes/count`
+#### **GET** `/api/like/count`
 
 - **Description:** Counts the number of likes for a specific post.
 - **Parameters:**
@@ -157,25 +156,25 @@
 
 ## Post Controller
 
-**Base URL:** **`/api/posts`**
+**Base URL:** **`/api/post`**
 
 ### Endpoints
 
-#### **POST** `/api/posts`
+#### **POST** `/api/post`
 
 - **Description:** Creates a new post.
 - **Request Body:**
   - `title` (String) - The title of the post.
   - `content` (String) - The content of the post.
-  - `author` (Author) - The author of the post.
+  - `author` (AUTHOR) - The author of the post.
   - `createdAt` (String, ISO8601 DateTime) - The creation date and time of the post.
 - **Response:**
   - **Body:** The created post object.
   - **HTTP Status Code:** `201 Created`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if there is an error creating the post.
 
-#### **GET** `/api/posts/{postId}`
+#### **GET** `/api/post/{postId}`
 
 - **Description:** Retrieves a post by its ID.
 - **Parameters:**
@@ -186,7 +185,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if the post with the specified ID is not found.
 
-#### **GET** `/api/posts`
+#### **GET** `/api/post`
 
 - **Description:** Retrieves all posts.
 - **Response:**
@@ -194,7 +193,7 @@
   - **HTTP Status Code:** `200 OK`
 - **Security:** Publicly accessible.
 
-#### **PUT** `/api/posts/{postId}`
+#### **PATCH** `/api/post/{postId}`
 
 - **Description:** Updates an existing post by its ID.
 - **Parameters:**
@@ -206,15 +205,15 @@
 - **Response:**
   - **Body:** The updated post object.
   - **HTTP Status Code:** `200 OK`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if the post with the specified ID is not found.
 
-#### **DELETE** `/api/posts/{postId}`
+#### **DELETE** `/api/post/{postId}`
 
 - **Description:** Deletes a post by its ID.
 - **Parameters:**
   - `Path Variable:` `postId` (String) - The ID of the post to be deleted.
 - **Response:**
   - **HTTP Status Code:** `204 No Content`
-- **Security:** `Admin` or `Author` Authority required.
+- **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if the post with the specified ID is not found.

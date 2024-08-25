@@ -24,7 +24,7 @@ public class Comments {
 
     @DBRef
     @NonNull
-    private Author author;
+    private AUTHOR author;
 
     @NonNull
     private String content;

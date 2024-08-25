@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
  * REST controller for managing likes on posts.
  */
 @RestController
-@RequestMapping("/api/likes")
+@RequestMapping("/api/like")
 public class LikeController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class LikeController {
      */
     @Transactional
     @PostMapping
-    @PreAuthorize("hasAuthority('Admin') or hasAuthority('Author')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AUTHOR')")
     public ResponseEntity<?> saveLike(@RequestBody @Valid Likes like) throws BlogException {
         like.set_id(UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8));
         return new ResponseEntity<>(likeService.toggleLike(like), HttpStatus.CREATED);

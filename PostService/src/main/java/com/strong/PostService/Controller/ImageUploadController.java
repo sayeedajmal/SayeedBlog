@@ -42,7 +42,7 @@ public class ImageUploadController {
      */
     @Transactional
     @PostMapping("/upload")
-    @PreAuthorize("hasAuthority('Admin') or hasAuthority('Author')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AUTHOR')")
     public ResponseEntity<List<String>> uploadImages(@RequestParam("files") MultipartFile[] files) {
         List<String> fileIds = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -76,7 +76,7 @@ public class ImageUploadController {
      *         status 200 (OK)
      */
     @GetMapping
-    @PreAuthorize("hasAuthority('Admin') or hasAuthority('Author')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AUTHOR')")
     public ResponseEntity<List<String>> getAllImages() {
         List<String> imageIds = imageStorageService.listAllImages();
         return new ResponseEntity<>(imageIds, HttpStatus.OK);
@@ -91,7 +91,7 @@ public class ImageUploadController {
      */
     @Transactional
     @DeleteMapping("/{fileId}")
-    @PreAuthorize("hasAuthority('Admin') or hasAuthority('Author')")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('AUTHOR')")
     public ResponseEntity<Void> removeImageById(@PathVariable String fileId) {
         imageStorageService.deleteImage(fileId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -1,10 +1,5 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.project.sourcePaths": [
-        "AuthorService",
-        "blogservicediscovery"
-    ],
-    "java.project.explorer.showNonJavaResources": false,
-    "java.dependency.packagePresentation": "hierarchical",
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.project.sourcePaths": []
 }

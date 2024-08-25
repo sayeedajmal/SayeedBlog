@@ -11,6 +11,7 @@
         <module>PostService</module>
         <module>AuthorService</module>
         <module>blogservicediscovery</module>
+        <module>blogGateway</module>
     </modules>
 
     <dependencyManagement>

@@ -1,22 +1,14 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "java",
-      "name": "PostServiceApplication",
-      "request": "launch",
-      "mainClass": "com.strong.PostService.PostServiceApplication",
-      "projectName": "post_service"
-    },
-    {
-      "type": "java",
-      "name": "AuthorServiceApplication",
-      "request": "launch",
-      "mainClass": "com.strong.AuthorService.AuthorServiceApplication",
-      "projectName": "author_service"
-    }
-  ]
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-PostServiceApplication<post_service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.strong.PostService.PostServiceApplication",
+            "projectName": "post_service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
 }

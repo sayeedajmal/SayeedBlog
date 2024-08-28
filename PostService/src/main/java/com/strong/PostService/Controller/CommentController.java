@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
  * REST controller for managing comments.
  */
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("api/comment")
 public class CommentController {
 
     @Autowired

@@ -2,11 +2,11 @@
 
 ## Comment Controller
 
-**Base URL:** **`/api/comment`**
+**Base URL:** **`api/comment`**
 
 ### Endpoints
 
-#### **POST** `/api/comment`
+#### **POST** `api/comment`
 
 - **Description:** Creates a new comment for a specified post.
 - **Request Body:**
@@ -20,7 +20,7 @@
 - **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if there is an error creating the comment.
 
-#### **GET** `/api/comment`
+#### **GET** `api/comment`
 
 - **Description:** Retrieves all comments for a specific post.
 - **Parameters:**
@@ -31,7 +31,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if an error occurs while retrieving comments.
 
-#### **GET** `/api/comment/{cmtId}`
+#### **GET** `api/comment/{cmtId}`
 
 - **Description:** Retrieves a comment by its ID.
 - **Parameters:**
@@ -42,7 +42,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if the comment with the specified ID is not found.
 
-#### **GET** `/api/comment/user/{userId}`
+#### **GET** `api/comment/user/{userId}`
 
 - **Description:** Retrieves all comments made by a specific user.
 - **Parameters:**
@@ -53,7 +53,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if an error occurs while retrieving comments.
 
-#### **DELETE** `/api/comment/{cmtId}`
+#### **DELETE** `api/comment/{cmtId}`
 
 - **Description:** Deletes a comment by its ID.
 - **Parameters:**
@@ -63,7 +63,7 @@
 - **Security:** `ADMIN` role required.
 - **Throws:** `BlogException` if the comment with the specified ID is not found.
 
-#### **GET** `/api/comment/count`
+#### **GET** `api/comment/count`
 
 - **Description:** Counts the number of comments for a specific post.
 - **Parameters:**
@@ -78,11 +78,11 @@
 
 ## ImageUpload Controller
 
-**Base URL:** **`/api/images`**
+**Base URL:** **`api/image`**
 
 ### Endpoints
 
-#### **POST** `/api/images/upload`
+#### **POST** `api/images/upload`
 
 - **Description:** Uploads images.
 - **Request Body:**
@@ -93,7 +93,7 @@
 - **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `IOException` if there is an error during file upload.
 
-#### **GET** `/api/images/{fileId}`
+#### **GET** `api/images/{fileId}`
 
 - **Description:** Retrieves an image by its ID.
 - **Parameters:**
@@ -104,7 +104,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if the image with the specified ID is not found.
 
-#### **GET** `/api/images`
+#### **GET** `api/images`
 
 - **Description:** Lists all uploaded images.
 - **Response:**
@@ -112,7 +112,7 @@
   - **HTTP Status Code:** `200 OK`
 - **Security:** `ADMIN` or `AUTHOR` Authority required.
 
-#### **DELETE** `/api/images/{fileId}`
+#### **DELETE** `api/images/{fileId}`
 
 - **Description:** Deletes an image by its ID.
 - **Parameters:**
@@ -126,7 +126,7 @@
 
 ## Like Controller
 
-**Base URL:** **`/api/like`**
+**Base URL:** **`api/like`**
 
 ### Endpoints
 
@@ -141,7 +141,7 @@
 - **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if an error occurs while toggling the like.
 
-#### **GET** `/api/like/count`
+#### **GET** `api/like/count`
 
 - **Description:** Counts the number of likes for a specific post.
 - **Parameters:**
@@ -156,11 +156,11 @@
 
 ## Post Controller
 
-**Base URL:** **`/api/post`**
+**Base URL:** **`api/post`**
 
 ### Endpoints
 
-#### **POST** `/api/post`
+#### **POST** `api/post`
 
 - **Description:** Creates a new post.
 - **Request Body:**
@@ -174,7 +174,7 @@
 - **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if there is an error creating the post.
 
-#### **GET** `/api/post/{postId}`
+#### **GET** `api/post/{postId}`
 
 - **Description:** Retrieves a post by its ID.
 - **Parameters:**
@@ -185,7 +185,7 @@
 - **Security:** Publicly accessible.
 - **Throws:** `BlogException` if the post with the specified ID is not found.
 
-#### **GET** `/api/post`
+#### **GET** `api/post`
 
 - **Description:** Retrieves all posts.
 - **Response:**
@@ -193,7 +193,7 @@
   - **HTTP Status Code:** `200 OK`
 - **Security:** Publicly accessible.
 
-#### **PATCH** `/api/post/{postId}`
+#### **PATCH** `api/post/{postId}`
 
 - **Description:** Updates an existing post by its ID.
 - **Parameters:**
@@ -208,7 +208,7 @@
 - **Security:** `ADMIN` or `AUTHOR` Authority required.
 - **Throws:** `BlogException` if the post with the specified ID is not found.
 
-#### **DELETE** `/api/post/{postId}`
+#### **DELETE** `api/post/{postId}`
 
 - **Description:** Deletes a post by its ID.
 - **Parameters:**

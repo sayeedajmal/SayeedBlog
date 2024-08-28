@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: PostService
+  data:
+    mongodb:
+      uri: ${BlogUrl}
+      database: ${BlogDB}
+      auto-index-creation: true
+  servlet:
+    multipart:
+      enabled: ${MULTIPART_ENABLED}
+      max-file-size: ${MAX_FILE_SIZE}
+      max-request-size: ${MAX_REQUEST_SIZE}
+
+server:
+  port: 0
+
+app:
+  version: 1.4
+
+Post:
+  Cors:
+    Url: ${CORS_URL}
+    Methods: ${CORS_METHODS}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${MicroZone}
+
+internal:
+  ServiceSecret: ${JWT_SECRET}
+
+logging:
+  level:
+    org.springframework.web: ERROR
+    feign: ERROR

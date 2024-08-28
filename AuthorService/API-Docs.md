@@ -2,13 +2,13 @@
 
 ## Actuator Controller
 
-**Base URL:** `/api`
+**Base URL:** `api/author`
 
 ### Endpoints
 
-#### GET /actuator/health
+#### GET /actuator/info
 
-- **Description:** Checks the health status of the service.
+- **Description:** Checks the info status of the service.
 - **Method:** `GET`
 - **Response:**
   - **Body:** `{"status": "UP"}`
@@ -18,7 +18,7 @@
 
 ## Author Controller
 
-**Base URL:** `/api/author`
+**Base URL:** `api/author`
 
 ### Endpoints
 
@@ -121,7 +121,7 @@
 
 ## Image Controller
 
-**Base URL:** `/api/images`
+**Base URL:** `api/image`
 
 ### Endpoints
 

@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
  * REST controller for managing posts.
  */
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("api/post")
 public class PostController {
 
     @Autowired

@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
  * REST controller for managing likes on posts.
  */
 @RestController
-@RequestMapping("/api/like")
+@RequestMapping("api/like")
 public class LikeController {
 
     @Autowired

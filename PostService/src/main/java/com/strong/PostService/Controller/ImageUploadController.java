@@ -28,7 +28,7 @@ import jakarta.transaction.Transactional;
  * REST controller for managing image uploads and retrievals.
  */
 @RestController
-@RequestMapping("/api/images")
+@RequestMapping("api/image")
 public class ImageUploadController {
 
     @Autowired

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * format.
  */
 @RestController
-@RequestMapping("actuator")
+@RequestMapping("api/author")
 public class Actuator {
     @Value("${app.version}")
     private String appVersion;
@@ -28,7 +28,7 @@ public class Actuator {
      * @return A response indicating the health status of the service with a message
      *         "UP" and HTTP status code 200 (OK).
      */
-    @GetMapping("info")
+    @GetMapping("actuator/info")
     public ResponseEntity<?> info() {
         HashMap<String, Object> info = new HashMap<>();
         info.put("Status", "UP");

@@ -27,7 +27,7 @@ import jakarta.transaction.Transactional;
  * format.
  */
 @RestController
-@RequestMapping("/api/images")
+@RequestMapping("api/image")
 public class ImageController {
 
     @Autowired

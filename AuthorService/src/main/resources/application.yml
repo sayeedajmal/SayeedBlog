@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: AuthorService
+  data:
+    mongodb:
+      uri: ${BlogUrl}
+      database: ${BlogDB}
+  servlet:
+    multipart:
+      enabled: ${MULTIPART_ENABLED}
+      max-file-size: ${MAX_FILE_SIZE}
+      max-request-size: ${MAX_REQUEST_SIZE}
+  main:
+    allow-circular-references: true
+  devtools:
+    add-properties: false
+
+server:
+  port: 0
+
+app:
+  version: ${APP_VERSION}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${MicroZone}
+
+jwt:
+  secret: ${JWT_SECRET}
+  tokenValidityInSeconds: ${JWT_TOKEN_VALIDITY_IN_SECONDS}
+  tokenRefreshInSeconds: ${JWT_TOKEN_REFRESH_IN_SECONDS}
+
+Author:
+  Cors:
+    Url: ${CORS_URL}
+    Methods: ${CORS_METHODS}
+
+logging:
+  level:
+    web: OFF
+    org.springframework.web: ERROR
+    feign: ERROR

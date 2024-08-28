@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/actuator")
+@RequestMapping("api/post")
 public class Actuator {
 
     @Value("${app.version}")
     private String appVersion;
 
-    @GetMapping("/info")
+    @GetMapping("actuator/info")
     public ResponseEntity<?> info() {
         HashMap<String, Object> info = new HashMap<>();
         info.put("Status", "UP");

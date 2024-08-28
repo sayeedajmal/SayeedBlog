@@ -36,7 +36,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * format.
  */
 @RestController
-@RequestMapping("/api/author")
+@RequestMapping("api/author")
 public class AuthorController {
 
     @Autowired

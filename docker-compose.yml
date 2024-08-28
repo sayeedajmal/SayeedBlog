@@ -1,0 +1,48 @@
+version: '3.3'
+
+services:
+  author-service:
+    build:
+      context: ./AuthorService
+      dockerfile: Dockerfile
+    ports:
+      - "0:8081"
+    env_file:
+      - ./AuthorService/.env.list
+    networks:
+      - blog-network
+
+  blog-discovery:
+    build:
+      context: ./BlogDiscovery
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - blog-network
+
+  blog-gateway:
+    build:
+      context: ./BlogGateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./BlogGateway/.env.list
+    networks:
+      - blog-network
+
+  post-service:
+    build:
+      context: ./PostService
+      dockerfile: Dockerfile
+    ports:
+      - "0:8081"
+    env_file:
+      - ./PostService/.env.list
+    networks:
+      - blog-network
+
+networks:
+  blog-network:
+    driver: bridge

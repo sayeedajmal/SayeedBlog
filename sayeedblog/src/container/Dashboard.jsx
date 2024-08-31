@@ -1,8 +1,16 @@
-import React from "react";
+// Dashboard.js
+import React, { useEffect } from "react";
 import Navbar from "../component/Navbar";
 import img from "../images/bg.jpg";
+import fetchUserData from "../RestApi/fetchUserData";
+import getImage from "../RestApi/getImage";
 
 function Dashboard() {
+  useEffect(() => {
+    fetchUserData();
+    getImage();
+  }, []);
+
   return (
     <div className="flex flex-col overflow-hidden h-screen bg-white text-black dark:bg-gray-900 dark:text-white">
       <Navbar className="w-screen border-b-2 border-black dark:border-gray-700" />

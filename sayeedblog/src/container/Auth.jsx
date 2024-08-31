@@ -1,7 +1,7 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { saveToken } from "../RestApi/Auth";
-import DarkMode from "../component/DarkMode";
 
 const Auth = () => {
   const [showSignup, setShowSignup] = useState(false);
@@ -12,31 +12,45 @@ const Auth = () => {
   const [signupBio, setSignupBio] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState("");
   const navigate = useNavigate();
 
-  // Handle login
+  const apiUrl = process.env.REACT_APP_AUTHOR;
+
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        `${apiUrl}/api/author/login`,
+        {
+          email: loginEmail,
+          password: loginPassword,
         },
-        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
-      });
-      if (!response.ok) throw new Error("Login failed");
-      const data = await response.json();
-      saveToken(data.token);
-      navigate("/");
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        saveToken(response.data);
+        navigate("/");
+      }
     } catch (error) {
-      alert("Login error:", error);
+      setResponseMessage(`${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle signup
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setResponseMessage("");
+
     try {
       const formData = new FormData();
       formData.append("name", signupName);
@@ -47,35 +61,55 @@ const Auth = () => {
         formData.append("profilePicture", profilePicture);
       }
 
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        body: formData,
-      });
-      if (!response.ok) throw new Error("Signup failed");
-      const data = await response.json();
-      saveToken(data.token);
-      navigate("/");
+      const response = await axios.post(
+        `${apiUrl}/api/author/signup`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data.status === 200) {
+        saveToken(response.data);
+        navigate("/");
+      }
     } catch (error) {
-      console.error("Signup error:", error);
+      setResponseMessage(`${error.response?.data?.message || error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleProfilePictureChange = (e) => {
-    if (e.target.files.length > 0) {
-      setProfilePicture(e.target.files[0]);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePicture(file);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800 p-4 md:p-8">
-      <div className="w-11/12 lg:w-1/2 bg-white dark:bg-gray-600 p-8 rounded-xl shadow-lg space-y-3">
-      <DarkMode/>
-        <h2 className="text-3xl font-extrabold text-center text-gray-900 dark:text-gray-100">
-          {showSignup ? "Signup" : "Login"}
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg space-y-6">
+        <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-gray-100">
+          {showSignup ? "Create an Account" : "Login"}
         </h2>
 
+        {loading && (
+          <div className="flex justify-center">
+            <div className="w-12 h-12 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          </div>
+        )}
+
+        {responseMessage && (
+          <div className="text-center text-red-600 dark:text-red-400">
+            {responseMessage}
+          </div>
+        )}
+
         {showSignup ? (
-          <form onSubmit={handleSignupSubmit} className="space-y-3">
+          <form onSubmit={handleSignupSubmit} className="space-y-4">
             <div>
               <label
                 htmlFor="name"
@@ -88,7 +122,7 @@ const Auth = () => {
                 type="text"
                 value={signupName}
                 onChange={(e) => setSignupName(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
                 placeholder="Enter your name"
                 required
               />
@@ -105,7 +139,7 @@ const Auth = () => {
                 type="email"
                 value={signupEmail}
                 onChange={(e) => setSignupEmail(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
                 placeholder="Enter your email"
                 required
               />
@@ -119,10 +153,10 @@ const Auth = () => {
               </label>
               <textarea
                 id="bio"
-                rows="3"
+                rows="2"
                 value={signupBio}
                 onChange={(e) => setSignupBio(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
                 placeholder="Tell us about yourself"
                 required
               ></textarea>
@@ -139,27 +173,52 @@ const Auth = () => {
                 type="password"
                 value={signupPassword}
                 onChange={(e) => setSignupPassword(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
                 placeholder="Enter your password"
                 required
               />
             </div>
+            <div>
+              <label
+                htmlFor="profilePicture"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Profile Image
+              </label>
+              <input
+                id="profilePicture"
+                type="file"
+                accept="image/*"
+                required
+                onChange={handleImageChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
+              />
+              {profilePicture && (
+                <div className="mt-4">
+                  <img
+                    src={URL.createObjectURL(profilePicture)}
+                    alt="Profile Preview"
+                    className="w-1/4 h-auto mx-auto rounded-full"
+                  />
+                </div>
+              )}
+            </div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
             >
-              Signup
+              Sign Up
             </button>
             <button
               type="button"
               onClick={() => setShowSignup(false)}
-              className="w-full mt-2 bg-gray-500 text-white py-3 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              className="w-full font-bold text-black dark:text-white"
             >
               Switch to Login
             </button>
           </form>
         ) : (
-          <form onSubmit={handleLoginSubmit} className="space-y-3">
+          <form onSubmit={handleLoginSubmit} className="space-y-4">
             <div>
               <label
                 htmlFor="loginEmail"
@@ -172,7 +231,7 @@ const Auth = () => {
                 type="email"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
                 placeholder="Enter your email"
                 required
               />
@@ -189,21 +248,21 @@ const Auth = () => {
                 type="password"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300"
                 placeholder="Enter your password"
                 required
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-500 dark:hover:bg-blue-600"
             >
               Login
             </button>
             <button
               type="button"
               onClick={() => setShowSignup(true)}
-              className="w-full mt-2 bg-gray-500 text-white py-3 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              className="w-full font-bold text-black dark:text-white"
             >
               Switch to Signup
             </button>

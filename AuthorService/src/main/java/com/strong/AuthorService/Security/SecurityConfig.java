@@ -72,7 +72,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/author/validateToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "api/image/**").permitAll()
+                        .requestMatchers("/api/author/actuator/info").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(authorService)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

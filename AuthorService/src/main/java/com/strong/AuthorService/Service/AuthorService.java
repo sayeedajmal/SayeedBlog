@@ -25,7 +25,6 @@ import com.strong.AuthorService.Repository.TokenRepository;
 import com.strong.AuthorService.Utils.AuthorException;
 import com.strong.AuthorService.Utils.JwtUtil;
 
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
@@ -55,7 +54,7 @@ public class AuthorService implements UserDetailsService {
 
     public Author getAuthorById(String id) throws AuthorException {
         return authorRepository.findById(id)
-                .orElseThrow(() -> new AuthorException("Author Not Found by this Id: " + id));
+                .orElseThrow(() -> new AuthorException("Author not found by this id: " + id));
     }
 
     public Author findByEmail(String email) {
@@ -64,7 +63,7 @@ public class AuthorService implements UserDetailsService {
     }
 
     public String signUp(Author author, MultipartFile profilePicture) throws AuthorException {
-        Optional<Author> existingAuthor = authorRepository.findByEmail(author.getEmail());
+        Optional<Author> existingAuthor = authorRepository.findByEmail(author.getEmail().toLowerCase());
         if (existingAuthor.isPresent()) {
             throw new AuthorException("Email already in use: " + author.getEmail());
         }
@@ -100,7 +99,7 @@ public class AuthorService implements UserDetailsService {
                     author.getEmail(),
                     author.getPassword()));
         } catch (AuthenticationException e) {
-            throw new JwtException("Incorrect email or password: " + e.getMessage());
+            throw new AuthorException(e.getMessage());
         }
 
         Author authenticatedAuthor = authorRepository.findByEmail(author.getEmail())

@@ -66,7 +66,7 @@ public class ImageController {
     @Transactional
     @PreAuthorize("hasAuthority('AUTHOR') or hasAuthority('ADMIN')")
     @DeleteMapping("/{fieldId}")
-    public ResponseEntity<?> removeImgById(@PathVariable("fieldId") String fieldId) throws AuthorException {
+    public ResponseEntity<?> removeImgById(@PathVariable String fieldId) throws AuthorException {
         imageStorageService.deleteImage(fieldId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

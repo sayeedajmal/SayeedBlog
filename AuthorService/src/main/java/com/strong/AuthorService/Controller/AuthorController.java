@@ -36,7 +36,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * format.
  */
 @RestController
-@RequestMapping("api/author")
+@RequestMapping("/api/author")
 public class AuthorController {
 
     @Autowired
@@ -126,10 +126,11 @@ public class AuthorController {
      * @throws AuthorException if the author with the specified email is not found.
      */
     @PreAuthorize("hasAuthority('AUTHOR') or hasAuthority('ADMIN')")
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Author> getAuthorByEmail(@PathVariable String email) throws AuthorException {
+    @GetMapping("/email")
+    public ResponseEntity<Author> getAuthorByEmail(@RequestParam String email) throws AuthorException {
         return new ResponseEntity<>(authorService.findByEmail(email), HttpStatus.OK);
     }
+
 
     /**
      * POST endpoint to create a new author.

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DarkMode from "../component/DarkMode";
 import img from "../images/bg.jpg";
+import getImage from "../RestApi/getImage";
 
 const navContent = [
   { name: "HOME", path: "/" },
@@ -14,6 +15,7 @@ const navContent = [
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [logoSrc, setLogoSrc] = useState(null);
 
   const toggleMenu = () => setMenuOpen(!isMenuOpen);
 
@@ -23,6 +25,23 @@ const Navbar = () => {
       document.body.style.overflow = "auto";
     };
   }, [isMenuOpen]);
+
+  const fileId = localStorage.getItem("profilePicture");
+
+  useEffect(() => {
+    if (fileId !== undefined || fileId !== null) {
+      const fetchImage = async () => {
+        try {
+          const imageBlob = await getImage(fileId);
+          const imageUrl = URL.createObjectURL(imageBlob);
+          setLogoSrc(imageUrl);
+        } catch (error) {
+          console.error("Error fetching image:", error);
+        }
+      };
+      fetchImage();
+    }
+  }, [fileId]);
 
   return (
     <div className="bg-white dark:bg-gray-800 w-full py-2 rounded-md border-b-2 border-b-slate-100 dark:border-b-gray-600">
@@ -47,7 +66,7 @@ const Navbar = () => {
         <div className="flex items-center space-x-3">
           <Link to="/Setting">
             <img
-              src={img}
+              src={logoSrc || img}
               alt="Settings"
               className="h-8 w-8 bg-cover rounded-full cursor-pointer"
             />

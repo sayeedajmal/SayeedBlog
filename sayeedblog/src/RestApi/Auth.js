@@ -1,4 +1,3 @@
-// Auth.js
 export const saveToken = (token) => {
   localStorage.setItem("authToken", token);
 };
@@ -23,21 +22,23 @@ export const saveUserData = (name, profilePicture, bio, id, email) => {
   localStorage.setItem("id", id);
 };
 
-export const getUserData = () => {
-  return {
-    name: localStorage.getItem("userName"),
-    id: localStorage.getItem("id"),
-    token: localStorage.getItem("authToken"),
-    email: localStorage.getItem("email"),
-    profilePicture: localStorage.getItem("profilePicture"),
-    bio: localStorage.getItem("bio"),
+  export const getUserData = () => {
+    return {
+      name: localStorage.getItem("userName"),
+      id: localStorage.getItem("id"),
+      imageBlob: localStorage.getItem('logoUrl'),
+      token: localStorage.getItem("authToken"),
+      email: localStorage.getItem("email"),
+      profilePicture: localStorage.getItem("profilePicture"),
+      bio: localStorage.getItem("bio"),
+    };
   };
-};
 
 export const removeUserData = () => {
   localStorage.removeItem("userName");
   localStorage.removeItem("profilePicture");
   localStorage.removeItem("bio");
+  localStorage.removeItem('logoUrl');
   localStorage.removeItem("authToken");
   localStorage.removeItem("email");
   localStorage.removeItem("id");

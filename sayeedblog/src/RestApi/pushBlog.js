@@ -1,4 +1,9 @@
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+const BASE_URL = process.env.REACT_APP_POST;
+
+// Function to get auth token from localStorage
+const getAuthToken = () => {
+  return localStorage.getItem('authToken');
+};
 
 // Function to extract blob URLs from content
 const extractBlobUrls = (content) => {
@@ -15,8 +20,13 @@ const uploadImage = async (blobUrl) => {
     const formData = new FormData();
     formData.append("files", blob);
 
-    const uploadResponse = await fetch(`${BASE_URL}/api/images/upload`, {
+    const authToken = getAuthToken();
+
+    const uploadResponse = await fetch(`${BASE_URL}/api/image/upload`, {
       method: "POST",
+      headers: {
+        "Authorization": `Bearer ${authToken}`
+      },
       body: formData,
     });
 
@@ -42,7 +52,7 @@ const replaceBlobUrlsInContent = async (content) => {
     try {
       const fileId = await uploadImage(blobUrl);
       uploadedImageIds.push(fileId);
-      replacements[blobUrl] = `${BASE_URL}/api/images/${fileId}`;
+      replacements[blobUrl] = `${BASE_URL}/api/image/${fileId}`;
     } catch {
       continue;
     }
@@ -71,10 +81,13 @@ export const pushBlog = async (blogData) => {
       images: uploadedImageIds,
     };
 
-    const response = await fetch(`${BASE_URL}/post`, {
+    const authToken = getAuthToken();
+
+    const response = await fetch(`${BASE_URL}/api/post`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${authToken}`
       },
       body: JSON.stringify(updatedBlogData),
     });
@@ -86,6 +99,6 @@ export const pushBlog = async (blogData) => {
     return await response.json();
   } catch (error) {
     console.error("Error posting blog:", error);
-    throw error;
+    alert("Error posting blog:",error)
   }
 };

@@ -10,14 +10,13 @@ const AllPosts = () => {
   const [error, setError] = useState(null);
 
   const BASE_URL =
-    process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+    process.env.REACT_APP_POST;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // Replace 'AuthorABC' with the actual author ID you want to query
         const response = await axios.get(
-          `${BASE_URL}/api/post/byAuthorId?authorId=AuthorABC`
+          `${BASE_URL}/api/post`
         );
         setPosts(response.data);
       } catch (err) {

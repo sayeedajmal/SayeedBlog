@@ -43,3 +43,9 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: ${MicroZone}
+
+# CORS Configuration using environment variables
+Gateway:
+  Cors:
+    Url: ${CORS_URL}
+    Methods: ${CORS_METHODS}

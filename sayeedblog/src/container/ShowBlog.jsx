@@ -10,13 +10,12 @@ const ShowBlog = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const BASE_URL =
-    process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
+  const BASE_URL = process.env.REACT_APP_POST;
 
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/api/post/byPostId?postId=${postId}`);
+        const response = await axios.get(`${BASE_URL}/api/post/${postId}`);
         setBlogData(response.data);
       } catch (err) {
         setError("Failed to fetch blog data.");

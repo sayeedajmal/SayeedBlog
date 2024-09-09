@@ -17,6 +17,8 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
+import { useNavigate } from 'react-router-dom';
+
 import {
   FontSize,
   MenuButtonAddTable,
@@ -54,11 +56,10 @@ import { pushBlog } from "../RestApi/pushBlog";
 
 const EditBlog = () => {
   const rteRef = useRef(null);
-
   const [formData, setFormData] = useState({
     title: "",
     summary: "",
-    authorId: "AuthorABC",
+    authorId: localStorage.getItem("id"),
     content: rteRef.current?.editor?.getHTML(),
     tags: [],
     category: "",
@@ -66,6 +67,8 @@ const EditBlog = () => {
   const [wordCount, setWordCount] = useState(0);
   const [previewContent, setPreviewContent] = useState("");
   const [preview, setPreview] = useState(false);
+  const navigate = useNavigate();
+
 
   /* Handle Submit of Data */
   const handleSubmit = async (event) => {
@@ -75,14 +78,14 @@ const EditBlog = () => {
       const result = await pushBlog({
         ...formData,
       });
-
-      console.log("Blog posted successfully:", result);
+      alert("Blog Posted Successfully");
+      navigate(`/blog/${result._id}`);
     } catch (error) {
       console.error("Error posting blog:", error);
     }
   };
 
-  const openLinkBubble = () => {};
+  const openLinkBubble = () => { };
 
   const insertImages = ({ images, editor }) => {
     if (editor && images && images.length > 0) {

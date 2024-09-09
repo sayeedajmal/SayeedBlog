@@ -1,14 +1,39 @@
-import React, { useState } from "react";
+import { LogoutSharp } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { removeUserData } from "../RestApi/Auth";
+import getImage from "../RestApi/getImage";
 
 const list = ["account", "privacy", "notifications", "security"];
 
 const ProfileSetting = () => {
-  const [activeItem, setActiveItem] = useState("account"); // Default to "account"
+  const navigate = useNavigate();
+  const [activeItem, setActiveItem] = useState("account");
+  const [imageSrc, setImageSrc] = useState(null);
 
   const handleClick = (item) => {
     setActiveItem(item);
   };
 
+  const fileId = localStorage.getItem("profilePicture");
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const imageBlob = await getImage(fileId);
+        const imageUrl = URL.createObjectURL(imageBlob);
+        setImageSrc(imageUrl);
+      } catch (error) {
+        console.error("Error fetching image:", error);
+      }
+    };
+
+    fetchImage();
+  }, [fileId]);
+
+  const logout = () => {
+    removeUserData();
+    navigate("/");
+  };
   return (
     <div className="flex flex-row gap-4 w-full">
       {/* Side Panel */}
@@ -29,14 +54,19 @@ const ProfileSetting = () => {
             </li>
           ))}
         </ul>
+        <button
+          onClick={logout}
+          className=" w-1/2 p-2 rounded-xl m-2 bg-blue-500 text-white dark:bg-gray-200 dark:text-black"
+        >
+          <LogoutSharp />
+        </button>
       </div>
-
       {/* Main Container */}
       <div className="flex-1 p-6 bg-gray-200 dark:bg-gray-700">
         {/* Profile Image */}
         <div className="flex justify-center mb-6">
           <img
-            src="https://sayeedthedev.web.app/static/media/profile.4afd52b4b7832ec1665a.png"
+            src={imageSrc}
             className="h-32 w-32 object-cover rounded-full border-4 border-blue-500"
             alt="Profile"
           />

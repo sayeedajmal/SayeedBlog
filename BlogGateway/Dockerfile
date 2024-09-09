@@ -6,6 +6,8 @@ WORKDIR /app
 COPY target/BlogGateway.jar /app/BlogGateway.jar
 
 ENV MicroZone=${MicroZone}
+ENV CORS_URL=${CORS_URL}
+ENV CORS_METHODS=${CORS_METHODS}
 # Expose the port the app runs on
 EXPOSE 8080
 

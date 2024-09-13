@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'author-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['author-service:8081']  # Use internal network port 8081
+
+  - job_name: 'post-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['post-service:8081']  # Use internal network port 8081

@@ -41,3 +41,9 @@ logging:
     web: OFF
     org.springframework.web: ERROR
     feign: ERROR
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus

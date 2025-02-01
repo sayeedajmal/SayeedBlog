@@ -2,13 +2,19 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-PostServiceApplication<post_service>",
+            "name": "AuthorServiceApplication",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
+            "mainClass": "com.strong.AuthorService.AuthorServiceApplication",
+            "projectName": "author_service",
+            "envFile": "${workspaceFolder}/AuthorService/.env"
+        },
+        {
+            "type": "java",
+            "name": "PostServiceApplication",
+            "request": "launch",
             "mainClass": "com.strong.PostService.PostServiceApplication",
             "projectName": "post_service",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/PostService/.env"
         }
     ]
 }

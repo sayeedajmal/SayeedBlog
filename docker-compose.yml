@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   author-service:
     build:
@@ -8,7 +6,7 @@ services:
     ports:
       - "0:8081"
     env_file:
-      - ./AuthorService/.env.list
+      - ./AuthorService/.env
     networks:
       - blog-network
 
@@ -28,7 +26,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - ./BlogGateway/.env.list
+      - ./BlogGateway/.env
     networks:
       - blog-network
 
@@ -39,7 +37,7 @@ services:
     ports:
       - "0:8081"
     env_file:
-      - ./PostService/.env.list
+      - ./PostService/.env
     networks:
       - blog-network
 
@@ -52,22 +50,10 @@ services:
       - "9090:9090"
     networks:
       - blog-network
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - "8082:3000"
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    networks:
-      - blog-network
+    depends_on:
+      - author-service
+      - post-service
 
 networks:
   blog-network:
     driver: bridge
-
-volumes:
-  grafana-storage:

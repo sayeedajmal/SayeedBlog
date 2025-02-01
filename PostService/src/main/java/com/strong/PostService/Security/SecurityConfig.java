@@ -40,7 +40,7 @@ public class SecurityConfig {
         http.cors(cors -> cors.disable())//configurationSource(corsConfigurationSource())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/actuator/").permitAll()
+                        .requestMatchers("actuator/info").permitAll()
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -72,7 +72,11 @@ To run the project using Docker, follow these steps:
    - **blog-discovery**: [http://localhost:8761](http://localhost:8761)
    - **blog-gateway**: [http://localhost:8080](http://localhost:8080)
    - **post-service**: (Map to your local port, check `docker-compose.yml` for port details)
-
+   - Create a `.env` file in the `FrontEnd` directory with the following content:
+      ```env
+      REACT_APP_AUTHOR="http://localhost:8080/api/authorservice"
+      REACT_APP_POST="http://localhost:8080/api/postservice"
+      ```
 4. **Stop Services**
 
    To stop and remove all running services, run:

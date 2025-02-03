@@ -13,7 +13,9 @@ show_menu() {
   echo -e "${YELLOW}Choose a service to build:${RESET}"
   echo -e "${GREEN}1.${RESET} AuthorService"
   echo -e "${GREEN}2.${RESET} PostService"
-  echo -e "${GREEN}3.${RESET} Both"
+  echo -e "${GREEN}3.${RESET} BlogGateway"
+  echo -e "${GREEN}4.${RESET} BlogDiscovery"
+  echo -e "${GREEN}5.${RESET} All Services (AuthorService, PostService, BlogGateway, BlogDiscovery)"
 }
 
 # Function to track and display elapsed time every second
@@ -89,7 +91,57 @@ case $choice in
     ;;
 
   3)
-    echo -e "${GREEN}Building Both AuthorService and PostService...${RESET}"
+    echo -e "${GREEN}Building BlogGateway...${RESET}"
+
+    # Navigate to the BlogGateway directory
+    cd BlogGateway || { echo -e "${RED}Error: Directory BlogGateway not found!${RESET}"; exit 1; }
+
+    # Create a log file and redirect Maven output to it
+    touch "$LOG_FILE"
+
+    # Start tracking time in the background
+    track_time & 
+    timer_pid=$!  # Save the PID of the timer process
+
+    # Perform Maven build silently
+    mvn clean install -DskipTests > "$LOG_FILE" 2>&1
+
+    # Stop the timer
+    kill $timer_pid
+
+    echo -e "${GREEN}BlogGateway build completed.${RESET}"
+
+    # Delete the log file
+    rm -f "$LOG_FILE"
+    ;;
+
+  4)
+    echo -e "${GREEN}Building BlogDiscovery...${RESET}"
+
+    # Navigate to the BlogDiscovery directory
+    cd BlogDiscovery || { echo -e "${RED}Error: Directory BlogDiscovery not found!${RESET}"; exit 1; }
+
+    # Create a log file and redirect Maven output to it
+    touch "$LOG_FILE"
+
+    # Start tracking time in the background
+    track_time & 
+    timer_pid=$!  # Save the PID of the timer process
+
+    # Perform Maven build silently
+    mvn clean install -DskipTests > "$LOG_FILE" 2>&1
+
+    # Stop the timer
+    kill $timer_pid
+
+    echo -e "${GREEN}BlogDiscovery build completed.${RESET}"
+
+    # Delete the log file
+    rm -f "$LOG_FILE"
+    ;;
+
+  5)
+    echo -e "${GREEN}Building All Services (AuthorService, PostService, BlogGateway, BlogDiscovery)...${RESET}"
 
     # Build AuthorService
     cd AuthorService || { echo -e "${RED}Error: Directory AuthorService not found!${RESET}"; exit 1; }
@@ -109,12 +161,30 @@ case $choice in
     kill $timer_pid  # Stop the timer
     echo -e "${GREEN}PostService build completed.${RESET}"
 
-    # Delete the log file after both builds
+    # Build BlogGateway
+    cd ../BlogGateway || { echo -e "${RED}Error: Directory BlogGateway not found!${RESET}"; exit 1; }
+    touch "$LOG_FILE"
+    track_time & 
+    timer_pid=$!  # Save the PID of the timer process
+    mvn clean install -DskipTests > "$LOG_FILE" 2>&1
+    kill $timer_pid  # Stop the timer
+    echo -e "${GREEN}BlogGateway build completed.${RESET}"
+
+    # Build BlogDiscovery
+    cd ../BlogDiscovery || { echo -e "${RED}Error: Directory BlogDiscovery not found!${RESET}"; exit 1; }
+    touch "$LOG_FILE"
+    track_time & 
+    timer_pid=$!  # Save the PID of the timer process
+    mvn clean install -DskipTests > "$LOG_FILE" 2>&1
+    kill $timer_pid  # Stop the timer
+    echo -e "${GREEN}BlogDiscovery build completed.${RESET}"
+
+    # Delete the log file after all builds
     rm -f "$LOG_FILE"
     ;;
 
   *)
-    echo -e "${RED}Invalid choice. Please choose 1, 2, or 3.${RESET}"
+    echo -e "${RED}Invalid choice. Please choose 1, 2, 3, 4, or 5.${RESET}"
     ;;
 esac
 

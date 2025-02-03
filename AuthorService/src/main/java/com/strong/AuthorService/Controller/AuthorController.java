@@ -131,7 +131,6 @@ public class AuthorController {
         return new ResponseEntity<>(authorService.findByEmail(email), HttpStatus.OK);
     }
 
-
     /**
      * POST endpoint to create a new author.
      *
@@ -170,8 +169,9 @@ public class AuthorController {
      */
     @PostMapping("/login")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<String> login(@RequestBody Author author) throws AuthorException {
-        return ResponseEntity.ok(authorService.authenticate(author));
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password)
+            throws AuthorException {
+        return ResponseEntity.ok(authorService.authenticate(email, password));
     }
 
     /**

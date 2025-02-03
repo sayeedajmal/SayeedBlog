@@ -93,17 +93,17 @@ public class AuthorService implements UserDetailsService {
         return accessToken;
     }
 
-    public String authenticate(Author author) throws AuthorException {
+    public String authenticate(String email, String password) throws AuthorException {
+        Author authenticatedAuthor = authorRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Author not found"));
+
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    author.getEmail(),
-                    author.getPassword()));
+                    email,
+                    password));
         } catch (AuthenticationException e) {
             throw new AuthorException(e.getMessage());
         }
-
-        Author authenticatedAuthor = authorRepository.findByEmail(author.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Author not found"));
 
         String accessToken = jwtUtil.generateAccessToken(authenticatedAuthor);
         String refreshToken = jwtUtil.generateRefreshToken(authenticatedAuthor);

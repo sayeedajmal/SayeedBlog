@@ -4,7 +4,7 @@ services:
       context: ./AuthorService
       dockerfile: Dockerfile
     ports:
-      - "0:8081"
+      - "8081:8081"
     env_file:
       - ./AuthorService/.env
     networks:
@@ -35,7 +35,7 @@ services:
       context: ./PostService
       dockerfile: Dockerfile
     ports:
-      - "0:8081"
+      - "8082:8082"
     env_file:
       - ./PostService/.env
     networks:

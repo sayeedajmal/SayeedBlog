@@ -13,7 +13,7 @@ spring:
       max-request-size: ${MAX_REQUEST_SIZE}
 
 server:
-  port: 0
+  port: 8082
 
 app:
   version: 1.4

@@ -29,7 +29,7 @@ public class FeignErrorDecoder implements ErrorDecoder {
                     return new BlogException(message);
                 } catch (IOException jsonException) {
                     // If JSON parsing fails, handle it as plain text
-                    return new BlogException(responseBody);
+                    return new BlogException(jsonException);
                 }
             }
         } catch (IOException e) {

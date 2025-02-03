@@ -32,10 +32,10 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.tokenValidityInSeconds}")
+    @Value("${jwt.tokenValidityInMilliSeconds}")
     private long accessTokenExpire;
 
-    @Value("${jwt.tokenRefreshInSeconds}")
+    @Value("${jwt.tokenRefreshInMilliSeconds}")
     private long refreshTokenExpire;
 
     @Autowired

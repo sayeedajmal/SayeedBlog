@@ -17,7 +17,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Underline from "@tiptap/extension-underline";
 import StarterKit from "@tiptap/starter-kit";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import {
   FontSize,
@@ -69,23 +69,23 @@ const EditBlog = () => {
   const [preview, setPreview] = useState(false);
   const navigate = useNavigate();
 
-
   /* Handle Submit of Data */
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const result = await pushBlog({
-        ...formData,
-      });
+    const result = await pushBlog({
+      ...formData,
+    });
+
+    if (result.status === 200) {
       alert("Blog Posted Successfully");
-      navigate(`/blog/${result._id}`);
-    } catch (error) {
-      console.error("Error posting blog:", error);
+      navigate(`/blog/${result.data._id}`);
+    } else {
+      alert(result.error);
     }
   };
 
-  const openLinkBubble = () => { };
+  const openLinkBubble = () => {};
 
   const insertImages = ({ images, editor }) => {
     if (editor && images && images.length > 0) {

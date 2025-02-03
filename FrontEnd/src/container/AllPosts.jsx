@@ -18,9 +18,9 @@ const AllPosts = () => {
         const response = await axios.get(
           `${BASE_URL}/api/post`
         );
-        setPosts(response.data);
+        setPosts(response.data);        
       } catch (err) {
-        setError("Failed to fetch posts.");
+        setError(err.response);
       } finally {
         setLoading(false);
       }
@@ -36,10 +36,6 @@ const AllPosts = () => {
       </p>
     );
 
-  if (error)
-    return (
-      <p className="text-center text-red-500 dark:text-red-400">{error}</p>
-    );
 
   return (
     <>

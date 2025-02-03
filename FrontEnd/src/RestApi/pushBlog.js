@@ -70,7 +70,6 @@ const replaceBlobUrlsInContent = async (content) => {
 export const pushBlog = async (blogData) => {
   console.log("PushBlog:", JSON.stringify(blogData));
 
-  try {
     const { updatedContent, uploadedImageIds } = await replaceBlobUrlsInContent(
       blogData.content
     );
@@ -92,13 +91,5 @@ export const pushBlog = async (blogData) => {
       body: JSON.stringify(updatedBlogData),
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to post blog");
-    }
-
     return await response.json();
-  } catch (error) {
-    console.error("Error posting blog:", error);
-    alert("Error posting blog:",error)
-  }
 };

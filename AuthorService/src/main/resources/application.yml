@@ -16,7 +16,7 @@ spring:
     add-properties: false
 
 server:
-  port: 0
+  port: 8081
 
 app:
   version: ${APP_VERSION}
@@ -28,8 +28,8 @@ eureka:
 
 jwt:
   secret: ${JWT_SECRET}
-  tokenValidityInSeconds: ${JWT_TOKEN_VALIDITY_IN_SECONDS}
-  tokenRefreshInSeconds: ${JWT_TOKEN_REFRESH_IN_SECONDS}
+  tokenValidityInMilliSeconds: ${JWT_TOKEN_VALIDITY_IN_MILLISECONDS}
+  tokenRefreshInMilliSeconds: ${JWT_TOKEN_REFRESH_IN_MILLISECONDS}
 
 Author:
   Cors:

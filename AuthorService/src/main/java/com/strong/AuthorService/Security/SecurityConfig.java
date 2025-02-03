@@ -73,7 +73,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/author/validateToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "api/image/**").permitAll()
-                        .requestMatchers("actuator/info").permitAll()
+                        .requestMatchers("actuator/**").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(authorService)
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)

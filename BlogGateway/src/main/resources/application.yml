@@ -4,57 +4,11 @@ spring:
   application:
     name: BlogGateway
 
-  config:
-    import: "optional:configserver:"
-
   cloud:
-    gateway:
-      routes:
-        - id: AUTHORSERVICE
-          uri: lb://AUTHORSERVICE
-          predicates:
-            - Path=/api/author/**
-            - Path=/api/image/**
-        - id: POSTSERVICE
-          uri: lb://POSTSERVICE
-          predicates:
-            - Path=/api/post/**
-            - Path=/api/comment/**
-            - Path=/api/like/**
-            - Path=/api/image/**
+    config:
+      uri: http://localhost:8888  
+      fail-fast: true
 
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  metrics:
-    export:
-      prometheus:
-        enabled: true
-  endpoint:
-    gateway:
-      enabled: true
 
 server:
   port: 8080
-
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: ${MicroZone}
-
-# CORS Configuration using environment variables
-Gateway:
-  Cors:
-    Url: ${CORS_URL}
-    Methods: ${CORS_METHODS}

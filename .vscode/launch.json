@@ -2,19 +2,27 @@
     "configurations": [
         {
             "type": "java",
-            "name": "AuthorServiceApplication",
+            "name": "Author",
             "request": "launch",
             "mainClass": "com.strong.AuthorService.AuthorServiceApplication",
             "projectName": "author_service",
-            "envFile": "${workspaceFolder}/AuthorService/.env"
+            "envFile": "${workspaceFolder}/.env"
         },
         {
             "type": "java",
-            "name": "PostServiceApplication",
+            "name": "Post",
             "request": "launch",
             "mainClass": "com.strong.PostService.PostServiceApplication",
             "projectName": "post_service",
-            "envFile": "${workspaceFolder}/PostService/.env"
-        }
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "BlogGateway",
+            "request": "launch",
+            "mainClass": "com.strong.blogGateway.BlogGatewayApplication",
+            "projectName": "blogGateway",
+            "envFile": "${workspaceFolder}/.env"
+        },
     ]
 }

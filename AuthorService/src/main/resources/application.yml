@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: dev
   application:
     name: AuthorService
   data:
@@ -16,9 +14,6 @@ spring:
     allow-circular-references: true
   devtools:
     add-properties: false
-  config:
-    import: "optional:configserver:"
-
 
 server:
   port: 8081

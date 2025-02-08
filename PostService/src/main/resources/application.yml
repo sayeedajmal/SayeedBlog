@@ -1,6 +1,10 @@
 spring:
   application:
     name: PostService
+    
+  config:
+    import: "optional:configserver:"
+
   data:
     mongodb:
       uri: ${BlogUrl}

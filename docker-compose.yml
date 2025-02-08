@@ -5,8 +5,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
-    env_file:
-      - ./AuthorService/.env
     networks:
       - blog-network
 
@@ -25,8 +23,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    env_file:
-      - ./BlogGateway/.env
     networks:
       - blog-network
 
@@ -36,8 +32,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8082:8082"
-    env_file:
-      - ./PostService/.env
     networks:
       - blog-network
 

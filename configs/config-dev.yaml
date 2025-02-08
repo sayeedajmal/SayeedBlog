@@ -12,7 +12,7 @@ cors:
   methods: "GET,POST,PUT,DELETE"
 
 microservice:
-  zone: "us-east-1"
+  zone: "http://blog-discovery:8761/eureka/"
 
 multipart:
   enabled: true

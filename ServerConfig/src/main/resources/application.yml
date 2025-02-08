@@ -9,4 +9,6 @@ spring:
       server:
         git:
           uri: https://github.com/sayeedajmal/SayeedBlog
+          searchPaths:
+            - ServerConfig
           cloneOnStart: true

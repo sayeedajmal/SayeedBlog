@@ -1,14 +1,10 @@
 package com.strong.AuthorService.Security;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.strong.AuthorService.Service.AuthorService;
 
@@ -91,18 +85,18 @@ public class SecurityConfig {
      * 
      * @return the CORS configuration source.
      */
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        List<String> allowedOrigins = Arrays.asList(CORS_URL.split(","));
-        config.setAllowedOrigins(allowedOrigins);
-        config.setAllowedMethods(Arrays.asList(CORS_METHODS.split(",")));
-        config.setAllowCredentials(true);
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        config.setMaxAge(3600L);
-        config.setExposedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION));
-        return request -> config;
-    }
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration config = new CorsConfiguration();
+    //     List<String> allowedOrigins = Arrays.asList(CORS_URL.split(","));
+    //     config.setAllowedOrigins(allowedOrigins);
+    //     config.setAllowedMethods(Arrays.asList(CORS_METHODS.split(",")));
+    //     config.setAllowCredentials(true);
+    //     config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+    //     config.setMaxAge(3600L);
+    //     config.setExposedHeaders(Arrays.asList(HttpHeaders.AUTHORIZATION));
+    //     return request -> config;
+    // }
 
     /**
      * Provides a PasswordEncoder bean using BCrypt hashing.

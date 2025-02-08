@@ -151,6 +151,7 @@ case $choice in
     mvn clean install -DskipTests > "$LOG_FILE" 2>&1
     kill $timer_pid  # Stop the timer
     echo -e "${GREEN}AuthorService build completed.${RESET}"
+    rm -f "$LOG_FILE"
 
     # Build PostService
     cd ../PostService || { echo -e "${RED}Error: Directory PostService not found!${RESET}"; exit 1; }
@@ -160,6 +161,7 @@ case $choice in
     mvn clean install -DskipTests > "$LOG_FILE" 2>&1
     kill $timer_pid  # Stop the timer
     echo -e "${GREEN}PostService build completed.${RESET}"
+    rm -f "$LOG_FILE"
 
     # Build BlogGateway
     cd ../BlogGateway || { echo -e "${RED}Error: Directory BlogGateway not found!${RESET}"; exit 1; }
@@ -169,6 +171,7 @@ case $choice in
     mvn clean install -DskipTests > "$LOG_FILE" 2>&1
     kill $timer_pid  # Stop the timer
     echo -e "${GREEN}BlogGateway build completed.${RESET}"
+    rm -f "$LOG_FILE"
 
     # Build BlogDiscovery
     cd ../BlogDiscovery || { echo -e "${RED}Error: Directory BlogDiscovery not found!${RESET}"; exit 1; }
@@ -178,8 +181,6 @@ case $choice in
     mvn clean install -DskipTests > "$LOG_FILE" 2>&1
     kill $timer_pid  # Stop the timer
     echo -e "${GREEN}BlogDiscovery build completed.${RESET}"
-
-    # Delete the log file after all builds
     rm -f "$LOG_FILE"
     ;;
 

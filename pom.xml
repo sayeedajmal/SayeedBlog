@@ -13,7 +13,7 @@
         <module>AuthorService</module>
         <module>BlogGateway</module>
         <module>BlogDiscovery</module>
-        <module>ConfigService</module>
+        <module>ServerConfig</module>
     </modules>
 
     <properties>

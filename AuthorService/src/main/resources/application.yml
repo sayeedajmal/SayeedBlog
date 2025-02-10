@@ -31,10 +31,10 @@ jwt:
   tokenValidityInMilliSeconds: ${JWT_TOKEN_VALIDITY_IN_MILLISECONDS}
   tokenRefreshInMilliSeconds: ${JWT_TOKEN_REFRESH_IN_MILLISECONDS}
 
-Author:
-  Cors:
-    Url: ${CORS_URL}
-    Methods: ${CORS_METHODS}
+# Author:
+#   Cors:
+#     Url: ${CORS_URL}
+#     Methods: ${CORS_METHODS}
 
 logging:
   level:

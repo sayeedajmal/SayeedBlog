@@ -18,10 +18,10 @@ server:
 app:
   version: 1.4
 
-Post:
-  Cors:
-    Url: ${CORS_URL}
-    Methods: ${CORS_METHODS}
+# Post:
+#   Cors:
+#     Url: ${CORS_URL}
+#     Methods: ${CORS_METHODS}
 
 eureka:
   client:

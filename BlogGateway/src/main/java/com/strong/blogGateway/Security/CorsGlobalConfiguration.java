@@ -28,6 +28,7 @@ public class CorsGlobalConfiguration {
         List<String> allowedMethods = Arrays.asList(CORS_METHODS.split(","));
         config.setAllowedMethods(allowedMethods);
         config.addAllowedHeader("*");
+        config.addExposedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 

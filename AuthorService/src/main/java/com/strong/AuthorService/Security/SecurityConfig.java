@@ -1,7 +1,6 @@
 package com.strong.AuthorService.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,11 +28,11 @@ import com.strong.AuthorService.Service.AuthorService;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Value("${Author.Cors.Url}")
-    private String CORS_URL;
+    // @Value("${Author.Cors.Url}")
+    // private String CORS_URL;
 
-    @Value("${Author.Cors.Methods}")
-    private String CORS_METHODS;
+    // @Value("${Author.Cors.Methods}")
+    // private String CORS_METHODS;
 
     private final AuthorService authorService;
     private final JwtRequestFilter jwtRequestFilter;

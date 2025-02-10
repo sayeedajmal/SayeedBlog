@@ -198,7 +198,7 @@ const Auth = () => {
                   <img
                     src={URL.createObjectURL(profilePicture)}
                     alt="Profile Preview"
-                    className="w-1/4 h-auto mx-auto rounded-full"
+                    className="w-24 h-24 mx-auto rounded-full object-cover"
                   />
                 </div>
               )}
